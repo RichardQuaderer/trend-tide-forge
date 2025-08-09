@@ -208,6 +208,40 @@ export default function Publish() {
         </p>
       </div>
 
+      {/* Video Preview */}
+      <Card className="shadow-creator">
+        <CardHeader>
+          <CardTitle>Video Preview</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="aspect-[9/16] max-w-xs mx-auto bg-muted rounded-lg overflow-hidden relative">
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Play className="w-16 h-16 text-muted-foreground" />
+            </div>
+            <div className="absolute bottom-4 left-4 right-4">
+              <div className="bg-black/50 rounded p-2 text-white text-xs">
+                <p className="font-medium">{title}</p>
+                <p className="text-white/80 mt-1 line-clamp-2">{description}</p>
+              </div>
+            </div>
+          </div>
+          {isABTesting && (
+            <div className="mt-4 text-center">
+              <p className="text-sm text-muted-foreground">
+                Testing {abTestVideos.length} video variations
+              </p>
+              <div className="flex justify-center gap-2 mt-2">
+                {abTestVideos.map((videoId, index) => (
+                  <Badge key={videoId} variant="outline" className="text-xs">
+                    V{index + 1}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
       {/* Standard content configuration */}
       <Card className="shadow-creator">
         <CardHeader>
@@ -254,6 +288,11 @@ export default function Publish() {
           </CardTitle>
         </CardHeader>
         <CardContent>
+          <div className="mb-4">
+            <p className="text-sm text-muted-foreground">
+              {isABTesting ? "Platform assignment configured in A/B test settings below" : `Selected: ${selectedPlatforms.map(id => platforms.find(p => p.id === id)?.label).join(', ')}`}
+            </p>
+          </div>
           {!isABTesting ? (
             <div className="grid grid-cols-1 gap-3">
               {platforms.map(platform => (
