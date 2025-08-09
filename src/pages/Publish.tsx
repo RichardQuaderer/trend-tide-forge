@@ -274,15 +274,7 @@ export default function Publish() {
       </Card>
 
       {/* Platforms */}
-      <Card className="shadow-creator">
-        <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <Share2 className="w-5 h-5 text-primary" />
-            <span>Platforms</span>
-          </CardTitle>
-        </CardHeader>
-        
-      </Card>
+      
 
       {/* A/B Testing Configuration - Collapsible */}
       {isABTesting && <Collapsible open={abTestExpanded} onOpenChange={setAbTestExpanded}>
