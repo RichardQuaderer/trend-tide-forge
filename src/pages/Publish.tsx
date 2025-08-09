@@ -193,7 +193,7 @@ export default function Publish() {
           Publish
         </h1>
         <p className="text-muted-foreground">
-          {isABTesting ? `Set up your A/B test with ${abTestVideos.length} video variations` : "Share your content across platforms"}
+          {isABTesting ? `Optimize performance with ${abTestVideos.length} video variations` : "Schedule and distribute your content to maximize reach"}
         </p>
       </div>
 
