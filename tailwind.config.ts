@@ -52,10 +52,10 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
-				'creator-purple': 'hsl(var(--creator-purple))',
-				'creator-blue': 'hsl(var(--creator-blue))',
-				'creator-pink': 'hsl(var(--creator-pink))',
-				'creator-orange': 'hsl(var(--creator-orange))',
+				'runway-purple': 'hsl(var(--runway-purple))',
+				'runway-teal': 'hsl(var(--runway-teal))',
+				'runway-magenta': 'hsl(var(--runway-magenta))',
+				'runway-gold': 'hsl(var(--runway-gold))',
 				success: {
 					DEFAULT: 'hsl(var(--success))',
 					foreground: 'hsl(var(--success-foreground))'

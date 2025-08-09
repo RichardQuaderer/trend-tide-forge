@@ -42,6 +42,9 @@ export interface AnalyticsData {
 export interface UserProfile {
   id: string;
   goal: string;
+  companyUrl: string;
+  companyLogo?: File | null;
+  targetAudience: string;
   style: string;
   platforms: string[];
   trendiness: number;

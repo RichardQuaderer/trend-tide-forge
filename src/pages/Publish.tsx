@@ -147,8 +147,8 @@ export default function Publish() {
 
   const generateVariant = () => {
     toast({
-      title: "Generating variant...",
-      description: "Creating A/B test version of your video",
+      title: "Discovering trends for variant...",
+      description: "Analyzing viral patterns to create an optimized version",
     });
   };
 

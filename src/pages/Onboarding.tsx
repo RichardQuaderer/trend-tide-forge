@@ -7,6 +7,9 @@ import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { 
   Target, 
   Palette, 
@@ -18,31 +21,35 @@ import {
   Instagram,
   ArrowRight,
   ArrowLeft,
-  Check
+  Check,
+  Building,
+  Upload,
+  Users
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { api, UserProfile } from "@/lib/api";
 
 const steps = [
-  { id: 1, title: "Your Goal", icon: Target },
-  { id: 2, title: "Style Preference", icon: Palette },
-  { id: 3, title: "Platforms & Settings", icon: Share2 },
-  { id: 4, title: "Connect Accounts", icon: Check },
+  { id: 1, title: "Business Goal", icon: Target },
+  { id: 2, title: "Company Info", icon: Building },
+  { id: 3, title: "Target Audience", icon: Users },
+  { id: 4, title: "Style & Platforms", icon: Palette },
+  { id: 5, title: "Connect Accounts", icon: Check },
 ];
 
 const goals = [
-  { id: "followers", label: "Grow Followers", desc: "Build audience and engagement" },
-  { id: "product", label: "Promote Product", desc: "Drive sales and awareness" },
-  { id: "knowledge", label: "Share Knowledge", desc: "Educate and inspire" },
-  { id: "fun", label: "Just for Fun", desc: "Creative expression and joy" },
+  { id: "brand-awareness", label: "Brand Awareness", desc: "Increase brand visibility and recognition" },
+  { id: "promote-product", label: "Promote Product", desc: "Drive sales and product awareness" },
+  { id: "generate-leads", label: "Generate Leads", desc: "Capture potential customers" },
+  { id: "trying-out", label: "Just Trying Out", desc: "Exploring video marketing potential" },
 ];
 
 const styles = [
-  { id: "meme", label: "Meme", desc: "Funny, relatable content", color: "bg-creator-orange" },
-  { id: "cinematic", label: "Cinematic", desc: "High-quality, dramatic", color: "bg-creator-purple" },
-  { id: "fast-cut", label: "Fast-cut", desc: "Quick, energetic editing", color: "bg-creator-pink" },
-  { id: "explainer", label: "Explainer", desc: "Educational, clear", color: "bg-creator-blue" },
-  { id: "product", label: "Product Showcase", desc: "Professional, commercial", color: "bg-creator-purple" },
+  { id: "meme", label: "Meme", desc: "Funny, relatable content", color: "bg-runway-gold" },
+  { id: "cinematic", label: "Cinematic", desc: "High-quality, dramatic", color: "bg-runway-purple" },
+  { id: "fast-cut", label: "Fast-cut", desc: "Quick, energetic editing", color: "bg-runway-magenta" },
+  { id: "explainer", label: "Explainer", desc: "Educational, clear", color: "bg-runway-teal" },
+  { id: "product", label: "Product Showcase", desc: "Professional, commercial", color: "bg-runway-purple" },
 ];
 
 const platforms = [
@@ -56,6 +63,9 @@ export default function Onboarding() {
   const [currentStep, setCurrentStep] = useState(1);
   const [profile, setProfile] = useState<Partial<UserProfile>>({
     goal: "",
+    companyUrl: "",
+    companyLogo: null,
+    targetAudience: "",
     style: "",
     platforms: [],
     trendiness: 70,
@@ -102,9 +112,10 @@ export default function Onboarding() {
   const canProceed = () => {
     switch (currentStep) {
       case 1: return !!profile.goal;
-      case 2: return !!profile.style;
-      case 3: return profile.platforms && profile.platforms.length > 0;
-      case 4: return true;
+      case 2: return !!profile.companyUrl;
+      case 3: return !!profile.targetAudience;
+      case 4: return !!profile.style && profile.platforms && profile.platforms.length > 0;
+      case 5: return true;
       default: return false;
     }
   };
@@ -144,9 +155,9 @@ export default function Onboarding() {
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.3 }}
           >
-            <Card className="shadow-creator-lg">
+            <Card className="shadow-runway-lg card-runway">
               <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
+                <CardTitle className="flex items-center space-x-2 text-tight">
                   {steps[currentStep - 1] && (
                     <>
                       {(() => {
@@ -159,21 +170,21 @@ export default function Onboarding() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
-                {/* Step 1: Goal Selection */}
+                {/* Step 1: Business Goal */}
                 {currentStep === 1 && (
                   <div className="space-y-4">
-                    <p className="text-muted-foreground">What's your main goal with video content?</p>
+                    <p className="text-muted-foreground">What's your main business goal with video content?</p>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       {goals.map((goal) => (
                         <Card
                           key={goal.id}
-                          className={`cursor-pointer transition-all duration-200 hover:shadow-creator ${
-                            profile.goal === goal.id ? 'ring-2 ring-primary bg-primary/5' : ''
+                          className={`cursor-pointer transition-all duration-200 hover:shadow-runway card-runway ${
+                            profile.goal === goal.id ? 'ring-2 ring-primary bg-primary/10' : ''
                           }`}
                           onClick={() => updateProfile({ goal: goal.id })}
                         >
-                          <CardContent className="p-4">
-                            <h3 className="font-semibold mb-1">{goal.label}</h3>
+                          <CardContent className="p-6">
+                            <h3 className="font-semibold mb-2">{goal.label}</h3>
                             <p className="text-sm text-muted-foreground">{goal.desc}</p>
                           </CardContent>
                         </Card>
@@ -182,45 +193,104 @@ export default function Onboarding() {
                   </div>
                 )}
 
-                {/* Step 2: Style Selection */}
+                {/* Step 2: Company Information */}
                 {currentStep === 2 && (
-                  <div className="space-y-4">
-                    <p className="text-muted-foreground">Which style resonates with you?</p>
-                    <div className="space-y-3">
-                      {styles.map((style) => (
-                        <Card
-                          key={style.id}
-                          className={`cursor-pointer transition-all duration-200 hover:shadow-creator ${
-                            profile.style === style.id ? 'ring-2 ring-primary bg-primary/5' : ''
-                          }`}
-                          onClick={() => updateProfile({ style: style.id })}
-                        >
-                          <CardContent className="p-4 flex items-center space-x-4">
-                            <div className={`w-12 h-12 rounded-xl ${style.color} flex items-center justify-center`}>
-                              <Palette className="w-6 h-6 text-white" />
-                            </div>
-                            <div>
-                              <h3 className="font-semibold">{style.label}</h3>
-                              <p className="text-sm text-muted-foreground">{style.desc}</p>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))}
+                  <div className="space-y-6">
+                    <p className="text-muted-foreground">Tell us about your company to create better targeted videos.</p>
+                    
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="companyUrl" className="text-sm font-medium">Company Website *</Label>
+                        <Input
+                          id="companyUrl"
+                          placeholder="https://yourcompany.com"
+                          value={profile.companyUrl || ""}
+                          onChange={(e) => updateProfile({ companyUrl: e.target.value })}
+                          className="mt-1"
+                        />
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor="companyLogo" className="text-sm font-medium">Company Logo (Optional)</Label>
+                        <div className="mt-1 flex items-center space-x-4">
+                          <Input
+                            id="companyLogo"
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => updateProfile({ companyLogo: e.target.files?.[0] || null })}
+                            className="flex-1"
+                          />
+                          <Button variant="outline" size="sm">
+                            <Upload className="w-4 h-4 mr-2" />
+                            Upload
+                          </Button>
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-1">PNG, JPG up to 5MB</p>
+                      </div>
                     </div>
                   </div>
                 )}
 
-                {/* Step 3: Platforms & Settings */}
+                {/* Step 3: Target Audience */}
                 {currentStep === 3 && (
                   <div className="space-y-6">
                     <div>
-                      <p className="text-muted-foreground mb-4">Which platforms do you want to post on?</p>
-                      <div className="space-y-3">
+                      <p className="text-muted-foreground mb-4">Who is your target audience? Our AI will analyze how to best reach them.</p>
+                      
+                      <div>
+                        <Label htmlFor="targetAudience" className="text-sm font-medium">Target Audience *</Label>
+                        <Textarea
+                          id="targetAudience"
+                          placeholder="e.g., Young professionals aged 25-35 interested in productivity tools, working in tech companies..."
+                          value={profile.targetAudience || ""}
+                          onChange={(e) => updateProfile({ targetAudience: e.target.value })}
+                          rows={4}
+                          className="mt-1"
+                        />
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Describe demographics, interests, behaviors, or any relevant details about your ideal customers.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Step 4: Style & Platforms */}
+                {currentStep === 4 && (
+                  <div className="space-y-6">
+                    <div>
+                      <p className="text-muted-foreground mb-4">Which style and platforms work best for your audience?</p>
+                      <div className="space-y-3 mb-6">
+                        {styles.map((style) => (
+                          <Card
+                            key={style.id}
+                            className={`cursor-pointer transition-all duration-200 hover:shadow-runway card-runway ${
+                              profile.style === style.id ? 'ring-2 ring-primary bg-primary/10' : ''
+                            }`}
+                            onClick={() => updateProfile({ style: style.id })}
+                          >
+                            <CardContent className="p-4 flex items-center space-x-4">
+                              <div className={`w-12 h-12 rounded-xl ${style.color} flex items-center justify-center`}>
+                                <Palette className="w-6 h-6 text-white" />
+                              </div>
+                              <div>
+                                <h3 className="font-semibold">{style.label}</h3>
+                                <p className="text-sm text-muted-foreground">{style.desc}</p>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <p className="text-muted-foreground mb-4">Select your target platforms:</p>
+                      <div className="space-y-3 mb-6">
                         {platforms.map((platform) => (
                           <Card
                             key={platform.id}
-                            className={`cursor-pointer transition-all duration-200 hover:shadow-creator ${
-                              profile.platforms?.includes(platform.id) ? 'ring-2 ring-primary bg-primary/5' : ''
+                            className={`cursor-pointer transition-all duration-200 hover:shadow-runway card-runway ${
+                              profile.platforms?.includes(platform.id) ? 'ring-2 ring-primary bg-primary/10' : ''
                             }`}
                             onClick={() => handlePlatformToggle(platform.id)}
                           >
@@ -241,7 +311,7 @@ export default function Onboarding() {
 
                     <div className="space-y-4">
                       <div>
-                        <label className="text-sm font-medium mb-2 block">Trendiness Level</label>
+                        <label className="text-sm font-medium mb-2 block">Content Trendiness</label>
                         <Slider
                           value={[profile.trendiness || 70]}
                           onValueChange={(value) => updateProfile({ trendiness: value[0] })}
@@ -250,15 +320,15 @@ export default function Onboarding() {
                           className="mb-2"
                         />
                         <div className="flex justify-between text-xs text-muted-foreground">
-                          <span>Safe & Classic</span>
-                          <span>Max Viral Potential</span>
+                          <span>Professional & Safe</span>
+                          <span>Trending & Viral</span>
                         </div>
                       </div>
 
                       <div className="flex items-center justify-between">
                         <div>
-                          <label className="text-sm font-medium">Auto-add Captions</label>
-                          <p className="text-xs text-muted-foreground">Automatically generate captions for accessibility</p>
+                          <label className="text-sm font-medium">Auto-generate Captions</label>
+                          <p className="text-xs text-muted-foreground">Automatically add captions for accessibility</p>
                         </div>
                         <Switch
                           checked={profile.autoCaptions}
@@ -269,8 +339,8 @@ export default function Onboarding() {
                   </div>
                 )}
 
-                {/* Step 4: Social Connect */}
-                {currentStep === 4 && (
+                {/* Step 5: Social Connect */}
+                {currentStep === 5 && (
                   <div className="space-y-6">
                     <div className="text-center">
                       <h3 className="text-lg font-semibold mb-2">Connect Your Accounts</h3>
@@ -283,7 +353,7 @@ export default function Onboarding() {
                       {platforms
                         .filter(p => profile.platforms?.includes(p.id))
                         .map((platform) => (
-                        <Card key={platform.id} className="hover:shadow-creator transition-all duration-200">
+                        <Card key={platform.id} className="hover:shadow-runway transition-all duration-200 card-runway">
                           <CardContent className="p-4 flex items-center justify-between">
                             <div className="flex items-center space-x-3">
                               <platform.icon className={`w-6 h-6 ${platform.color}`} />
@@ -324,7 +394,7 @@ export default function Onboarding() {
           <Button
             onClick={nextStep}
             disabled={!canProceed()}
-            className="flex items-center space-x-2 gradient-primary text-white"
+            className="flex items-center space-x-2"
           >
             <span>{currentStep === steps.length ? 'Finish' : 'Next'}</span>
             <ArrowRight className="w-4 h-4" />

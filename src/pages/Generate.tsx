@@ -343,7 +343,7 @@ export default function Generate() {
           {isGenerating ? (
             <>
               <Settings className="w-5 h-5 mr-2 animate-spin" />
-              Generating...
+              Discovering and applying viral trends...
             </>
           ) : (
             <>
@@ -364,10 +364,10 @@ export default function Generate() {
             <Progress value={generationProgress} className="h-2" />
             <div className="space-y-1 text-sm">
               <p className="font-medium">
-                {generationProgress < 30 ? "🎬 Analyzing script..." :
-                 generationProgress < 60 ? "🎨 Creating visuals..." :
-                 generationProgress < 90 ? "🎵 Adding audio..." :
-                 "✨ Final touches..."}
+                {generationProgress < 30 ? "🔍 Discovering trending elements..." :
+                 generationProgress < 60 ? "🎨 Applying viral video patterns..." :
+                 generationProgress < 90 ? "🚀 Optimizing for maximum engagement..." :
+                 "✨ Finalizing your viral-ready video..."}
               </p>
               <p className="text-muted-foreground">
                 This usually takes 30-60 seconds
