@@ -275,9 +275,7 @@ export default function Editor() {
             <h1 className="text-3xl font-bold text-gradient">
               {currentStep === "preview" ? "Choose Your Video Style" : "Video Editor"}
             </h1>
-            <p className="text-muted-foreground mt-1">
-              {currentStep === "preview" ? "Select video variations to A/B test and proceed to editing" : `Editing video ${currentEditingVideoIndex + 1} of ${selectedVideos.length} - ${videoVariations.find(v => v.id === selectedVideos[currentEditingVideoIndex])?.title}`}
-            </p>
+            
           </div>
           <div className="flex items-center gap-3">
             {currentStep === "edit" && <>
@@ -547,12 +545,7 @@ export default function Editor() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <Textarea
-                value={editPrompt}
-                onChange={(e) => setEditPrompt(e.target.value)}
-                placeholder="Describe how you want to edit this video... (e.g., make it more dramatic, add quick cuts, change the music style)"
-                className="min-h-[100px] text-sm"
-              />
+              <Textarea value={editPrompt} onChange={e => setEditPrompt(e.target.value)} placeholder="Describe how you want to edit this video... (e.g., make it more dramatic, add quick cuts, change the music style)" className="min-h-[100px] text-sm" />
               
               <Button className="w-full gradient-primary text-white">
                 <Wand2 className="w-4 h-4 mr-2" />
