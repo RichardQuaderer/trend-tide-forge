@@ -24,6 +24,7 @@ export default function Editor() {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration] = useState(30); // 30 seconds
   const [editPrompt, setEditPrompt] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
   const [trimStart, setTrimStart] = useState(0);
   const [trimEnd, setTrimEnd] = useState(30);
   const [selectedFormat, setSelectedFormat] = useState("tiktok");
@@ -298,9 +299,22 @@ export default function Editor() {
       <div className="space-y-6">
             <div className="text-center space-y-4">
               <p className="text-muted-foreground">Select the videos you would like to proceed with for editing and publishing. Each video uses different tones and approaches.</p>
-              <Button variant="outline" onClick={() => navigate('/generate')} className="gradient-primary text-white">
-                <RotateCcw className="w-4 h-4 mr-2" />
-                Generate New Videos
+              <Button 
+                variant="default" 
+                onClick={() => {
+                  setIsGenerating(true);
+                  // Simulate generation process
+                  setTimeout(() => {
+                    setIsGenerating(false);
+                    // In a real app, this would regenerate videos with the same inputs
+                    console.log("Regenerating videos with same inputs...");
+                  }, 3000);
+                }}
+                disabled={isGenerating}
+                className="bg-primary text-primary-foreground hover:bg-primary/90"
+              >
+                <RotateCcw className={`w-4 h-4 mr-2 ${isGenerating ? 'animate-spin' : ''}`} />
+                {isGenerating ? 'Generating...' : 'Generate New Videos'}
               </Button>
             </div>
             
