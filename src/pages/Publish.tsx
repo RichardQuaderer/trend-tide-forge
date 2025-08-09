@@ -201,7 +201,7 @@ export default function Publish() {
       {/* Header */}
       <div className="text-center space-y-4">
         <h1 className="text-3xl font-bold text-gradient">
-          {isABTesting ? "Configure A/B Test & Publish" : "Publish Your Video"}
+          Publish
         </h1>
         <p className="text-muted-foreground">
           {isABTesting ? `Set up your A/B test with ${abTestVideos.length} video variations` : "Share your content across platforms"}
