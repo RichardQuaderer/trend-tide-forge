@@ -8,68 +8,49 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Runway Color Palette */
-    --background: 0 0% 4%; /* #0A0A0A */
-    --foreground: 0 0% 100%; /* #FFFFFF */
+    /* Runway's Exact Color Palette */
+    --background: 0 0% 100%; /* Pure white background */
+    --foreground: 0 0% 0%; /* Pure black text */
 
-    --card: 0 0% 10%; /* #1A1A1A */
-    --card-foreground: 0 0% 100%;
+    --card: 0 0% 96%; /* Very light gray for cards */
+    --card-foreground: 0 0% 0%;
 
-    --popover: 0 0% 10%;
-    --popover-foreground: 0 0% 100%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 0%;
 
-    --primary: 251 100% 69%; /* #7A5FFF */
+    --primary: 0 0% 0%; /* Black for primary elements */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 10%;
-    --secondary-foreground: 0 0% 63%; /* #A0A0A0 */
+    --secondary: 0 0% 96%; /* Light gray */
+    --secondary-foreground: 0 0% 20%;
 
-    --muted: 0 0% 16%; /* #2A2A2A */
-    --muted-foreground: 0 0% 63%;
+    --muted: 0 0% 96%; /* Light gray for muted elements */
+    --muted-foreground: 0 0% 45%; /* Medium gray text */
 
-    --accent: 162 100% 48%; /* #00F5A0 */
-    --accent-foreground: 0 0% 4%;
+    --accent: 0 0% 94%; /* Slightly darker gray for accents */
+    --accent-foreground: 0 0% 0%;
 
-    --destructive: 348 83% 47%; /* #FF2D55 */
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 16%; /* #2A2A2A */
-    --input: 0 0% 16%;
-    --ring: 251 100% 69%;
+    --border: 0 0% 90%; /* Light border */
+    --input: 0 0% 94%; /* Input background */
+    --ring: 0 0% 0%; /* Black focus ring */
 
-    --radius: 1rem;
+    --radius: 0.5rem; /* Smaller radius for cleaner look */
 
-    /* Runway Accent Gradients */
-    --gradient-primary-start: 251 100% 69%; /* #7A5FFF */
-    --gradient-primary-end: 162 100% 48%; /* #00F5A0 */
-    --gradient-secondary-start: 348 83% 47%; /* #FF2D55 */
-    --gradient-secondary-end: 45 100% 50%; /* #FFB400 */
+    /* Runway specific colors */
+    --header-bg: 0 0% 0%; /* Pure black header */
+    --content-bg: 0 0% 100%; /* White content area */
+    --text-primary: 0 0% 0%; /* Black text */
+    --text-secondary: 0 0% 45%; /* Gray text */
+    --input-bg: 0 0% 97%; /* Very light gray for inputs */
+    --input-border: 0 0% 90%; /* Light border for inputs */
     
-    /* Runway Brand Colors */
-    --runway-purple: 251 100% 69%;
-    --runway-teal: 162 100% 48%;
-    --runway-magenta: 348 83% 47%;
-    --runway-gold: 45 100% 50%;
-    
-    /* Status colors */
-    --success: 162 100% 48%;
-    --success-foreground: 0 0% 4%;
-    --warning: 45 100% 50%;
-    --warning-foreground: 0 0% 4%;
-    
-    /* Surface variations */
-    --surface: 0 0% 10%;
-    --surface-variant: 0 0% 16%;
-    --on-surface: 0 0% 100%;
-    
-    /* Interactive states */
-    --hover: 0 0% 20%;
-    --pressed: 0 0% 14%;
-    
-    /* Shadows */
-    --shadow-soft: 0 0% 0% / 0.2;
-    --shadow-medium: 0 0% 0% / 0.3;
-    --shadow-strong: 0 0% 0% / 0.5;
+    /* Minimal shadows for Runway's clean aesthetic */
+    --shadow-soft: 0 0% 0% / 0.05;
+    --shadow-medium: 0 0% 0% / 0.1;
+    --shadow-strong: 0 0% 0% / 0.15;
 
     --sidebar-background: 0 0% 98%;
 
@@ -89,45 +70,45 @@ All colors MUST be HSL.
   }
 
   .dark {
-    /* Same as light mode for Runway's dark-first design */
-    --background: 0 0% 4%;
-    --foreground: 0 0% 100%;
+    /* Keep same light theme for Runway's light aesthetic */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 0%;
 
-    --card: 0 0% 10%;
-    --card-foreground: 0 0% 100%;
+    --card: 0 0% 96%;
+    --card-foreground: 0 0% 0%;
 
-    --popover: 0 0% 10%;
-    --popover-foreground: 0 0% 100%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 0%;
 
-    --primary: 251 100% 69%;
+    --primary: 0 0% 0%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 10%;
-    --secondary-foreground: 0 0% 63%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 20%;
 
-    --muted: 0 0% 16%;
-    --muted-foreground: 0 0% 63%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
 
-    --accent: 162 100% 48%;
-    --accent-foreground: 0 0% 4%;
+    --accent: 0 0% 94%;
+    --accent-foreground: 0 0% 0%;
 
-    --destructive: 348 83% 47%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 16%;
-    --input: 0 0% 16%;
-    --ring: 251 100% 69%;
+    --border: 0 0% 90%;
+    --input: 0 0% 94%;
+    --ring: 0 0% 0%;
     
-    --surface: 0 0% 10%;
-    --surface-variant: 0 0% 16%;
-    --on-surface: 0 0% 100%;
+    --surface: 0 0% 96%;
+    --surface-variant: 0 0% 94%;
+    --on-surface: 0 0% 0%;
     
-    --hover: 0 0% 20%;
-    --pressed: 0 0% 14%;
+    --hover: 0 0% 92%;
+    --pressed: 0 0% 88%;
     
-    --shadow-soft: 0 0% 0% / 0.2;
-    --shadow-medium: 0 0% 0% / 0.3;
-    --shadow-strong: 0 0% 0% / 0.5;
+    --shadow-soft: 0 0% 0% / 0.05;
+    --shadow-medium: 0 0% 0% / 0.1;
+    --shadow-strong: 0 0% 0% / 0.15;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -146,86 +127,82 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   }
   
   h1, h2, h3, h4, h5, h6 {
-    @apply font-bold;
-    letter-spacing: -0.5px;
+    @apply font-medium;
+    letter-spacing: -0.02em;
   }
 }
 
 @layer components {
-  /* Runway Gradient backgrounds */
-  .gradient-primary {
-    background: linear-gradient(135deg, hsl(var(--runway-purple)), hsl(var(--runway-teal)));
+  /* Runway's minimal design components */
+  .runway-header {
+    @apply bg-black text-white;
   }
   
-  .gradient-secondary {
-    background: linear-gradient(135deg, hsl(var(--runway-magenta)), hsl(var(--runway-gold)));
+  .runway-input {
+    @apply bg-input border border-input-border rounded-lg px-4 py-3;
+    @apply focus:outline-none focus:ring-1 focus:ring-black focus:border-black;
+    @apply placeholder:text-muted-foreground;
   }
   
-  .gradient-accent {
-    background: linear-gradient(135deg, hsl(var(--runway-teal)), hsl(var(--runway-purple)));
+  .runway-card {
+    @apply bg-card border border-border rounded-lg;
+    box-shadow: 0 1px 3px hsl(var(--shadow-soft));
   }
   
-  /* Runway button styles */
-  .button-runway {
-    @apply bg-gradient-to-r from-runway-purple to-runway-teal text-white font-medium;
-    @apply rounded-full px-6 py-3 transition-all duration-200;
-    @apply hover:brightness-110 hover:scale-[1.02];
+  .runway-button {
+    @apply bg-black text-white px-6 py-2 rounded-full;
+    @apply hover:bg-black/90 transition-colors duration-200;
+    @apply font-medium text-sm;
   }
   
-  /* Runway card styles */
-  .card-runway {
-    @apply bg-card border border-border rounded-xl;
-    box-shadow: 0 4px 12px hsl(var(--shadow-soft));
+  .runway-button-secondary {
+    @apply bg-transparent border border-border text-foreground px-6 py-2 rounded-full;
+    @apply hover:bg-muted transition-colors duration-200;
+    @apply font-medium text-sm;
   }
   
-  /* Enhanced shadows */
+  /* Minimal shadows */
   .shadow-runway {
-    box-shadow: 0 8px 32px hsl(var(--shadow-soft));
+    box-shadow: 0 1px 3px hsl(var(--shadow-soft));
   }
   
   .shadow-runway-lg {
-    box-shadow: 0 16px 64px hsl(var(--shadow-medium));
+    box-shadow: 0 4px 12px hsl(var(--shadow-medium));
   }
   
-  /* Animation utilities */
+  /* Clean animations */
   .animate-fade-in {
-    animation: fadeIn 0.3s ease-out forwards;
+    animation: fadeIn 0.2s ease-out forwards;
   }
   
   .animate-slide-up {
     animation: slideUp 0.3s ease-out forwards;
   }
-  
-  .animate-scale-in {
-    animation: scaleIn 0.2s ease-out forwards;
-  }
 }
 
 @layer utilities {
-  /* Runway text gradients */
-  .text-gradient {
-    background: linear-gradient(135deg, hsl(var(--runway-purple)), hsl(var(--runway-teal)));
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+  /* Clean typography matching Runway */
+  .text-runway-title {
+    @apply text-4xl md:text-5xl font-medium text-foreground;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
   }
   
-  .text-gradient-secondary {
-    background: linear-gradient(135deg, hsl(var(--runway-magenta)), hsl(var(--runway-gold)));
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+  .text-runway-subtitle {
+    @apply text-lg text-muted-foreground font-normal;
   }
   
-  /* Typography utilities */
-  .text-tight {
-    letter-spacing: -0.5px;
+  .text-runway-body {
+    @apply text-base text-foreground;
   }
 }
+
+/* Keyframes for smooth animations */
 
 @keyframes fadeIn {
   from {
