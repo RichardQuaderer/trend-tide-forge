@@ -74,6 +74,7 @@ export default function Generate() {
   const [captionStyle, setCaptionStyle] = useState("modern");
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationProgress, setGenerationProgress] = useState(0);
+  const [customStylePrompt, setCustomStylePrompt] = useState("");
 
   const improveScriptMutation = useMutation({
     mutationFn: (script: string) => api.improveScript(script),
@@ -271,6 +272,21 @@ export default function Generate() {
                     </CardContent>
                   </Card>
                 ))}
+              </div>
+              
+              {/* Custom Style Prompt */}
+              <div className="space-y-3 pt-4 border-t">
+                <p className="text-sm text-muted-foreground">Not happy with any of those? Describe what style you want:</p>
+                <Textarea
+                  value={customStylePrompt}
+                  onChange={(e) => setCustomStylePrompt(e.target.value)}
+                  placeholder="Describe your ideal video style... (e.g., dark and mysterious, bright and energetic, minimalist with clean graphics)"
+                  className="min-h-[80px] text-sm"
+                />
+                <Button variant="outline" className="w-full">
+                  <Wand2 className="w-4 h-4 mr-2" />
+                  Generate Custom Style
+                </Button>
               </div>
             </CardContent>
           </Card>

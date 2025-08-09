@@ -3,12 +3,13 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Play, Pause, RotateCcw, Scissors, Type, Sticker, Download, ArrowRight, Save, Smartphone, Monitor, TrendingUp, Shield, Info, CheckSquare } from "lucide-react";
+import { Play, Pause, RotateCcw, Scissors, Type, Sticker, Download, ArrowRight, Save, Smartphone, Monitor, TrendingUp, Shield, Info, CheckSquare, Wand2 } from "lucide-react";
 import { motion } from "framer-motion";
 export default function Editor() {
   const {
@@ -22,6 +23,7 @@ export default function Editor() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration] = useState(30); // 30 seconds
+  const [editPrompt, setEditPrompt] = useState("");
   const [trimStart, setTrimStart] = useState(0);
   const [trimEnd, setTrimEnd] = useState(30);
   const [selectedFormat, setSelectedFormat] = useState("tiktok");
@@ -528,6 +530,33 @@ export default function Editor() {
               
               <div className="text-xs text-muted-foreground p-2 bg-muted/50 rounded">
                 <p>💡 Tip: Keep text within the safe area (dashed lines) for best visibility across platforms</p>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* AI Video Editor */}
+          <Card className="shadow-creator">
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Wand2 className="w-5 h-5 text-primary" />
+                <span>AI Edit Video</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <Textarea
+                value={editPrompt}
+                onChange={(e) => setEditPrompt(e.target.value)}
+                placeholder="Describe how you want to edit this video... (e.g., make it more dramatic, add quick cuts, change the music style)"
+                className="min-h-[100px] text-sm"
+              />
+              
+              <Button className="w-full gradient-primary text-white">
+                <Wand2 className="w-4 h-4 mr-2" />
+                Apply AI Edits
+              </Button>
+              
+              <div className="text-xs text-muted-foreground p-2 bg-muted/50 rounded">
+                <p>💡 Tip: Be specific about what you want to change for better results</p>
               </div>
             </CardContent>
           </Card>
