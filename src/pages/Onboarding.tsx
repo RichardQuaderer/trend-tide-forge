@@ -27,12 +27,8 @@ const steps = [{
   icon: Users
 }, {
   id: 4,
-  title: "Style & Platforms",
-  icon: Palette
-}, {
-  id: 5,
-  title: "Connect Accounts",
-  icon: Check
+  title: "Connect Platforms",
+  icon: Share2
 }];
 const goals = [{
   id: "brand-awareness",
@@ -50,42 +46,6 @@ const goals = [{
   id: "trying-out",
   label: "Just Trying Out",
   desc: "Exploring video marketing potential"
-}];
-const styles = [{
-  id: "meme",
-  label: "Meme",
-  desc: "Funny, relatable content",
-  color: "bg-black",
-  iconColor: "text-white",
-  icon: Smile
-}, {
-  id: "cinematic",
-  label: "Cinematic",
-  desc: "High-quality, dramatic",
-  color: "bg-gray-800",
-  iconColor: "text-white",
-  icon: Camera
-}, {
-  id: "fast-cut",
-  label: "Fast-cut",
-  desc: "Quick, energetic editing",
-  color: "bg-gray-700",
-  iconColor: "text-white",
-  icon: Zap
-}, {
-  id: "explainer",
-  label: "Explainer",
-  desc: "Educational, clear",
-  color: "bg-gray-600",
-  iconColor: "text-white",
-  icon: GraduationCap
-}, {
-  id: "product",
-  label: "Product Showcase",
-  desc: "Professional, commercial",
-  color: "bg-gray-900",
-  iconColor: "text-white",
-  icon: Package
 }];
 const platforms = [{
   id: "tiktok",
@@ -111,10 +71,7 @@ export default function Onboarding() {
     companyUrl: "",
     companyLogo: null,
     targetAudience: "",
-    style: "",
-    platforms: [],
-    trendiness: 70,
-    autoCaptions: true
+    platforms: []
   });
   const progress = currentStep / steps.length * 100;
   const updateProfile = (updates: Partial<UserProfile>) => {
@@ -159,9 +116,7 @@ export default function Onboarding() {
       case 3:
         return !!profile.targetAudience;
       case 4:
-        return !!profile.style && profile.platforms && profile.platforms.length > 0;
-      case 5:
-        return true;
+        return profile.platforms && profile.platforms.length > 0;
       default:
         return false;
     }
@@ -276,84 +231,29 @@ export default function Onboarding() {
                     </div>
                   </div>}
 
-                {/* Step 4: Style & Platforms */}
+                {/* Step 4: Connect Platforms */}
                 {currentStep === 4 && <div className="space-y-6">
-                    <div>
-                      <p className="text-muted-foreground mb-4">Which style would you generally like your videos to be in?</p>
-                      <div className="space-y-3 mb-6">
-                        {styles.map(style => <Card key={style.id} className={`cursor-pointer transition-all duration-200 hover:shadow-runway card-runway ${profile.style === style.id ? 'ring-2 ring-primary bg-primary/10' : ''}`} onClick={() => updateProfile({
-                      style: style.id
-                    })}>
-                            <CardContent className="p-4 flex items-center space-x-4">
-                              <div className={`w-12 h-12 rounded-xl ${style.color} flex items-center justify-center`}>
-                                <style.icon className={`w-6 h-6 ${style.iconColor}`} />
-                              </div>
-                              <div>
-                                <h3 className="font-semibold">{style.label}</h3>
-                                <p className="text-sm text-muted-foreground">{style.desc}</p>
-                              </div>
-                            </CardContent>
-                          </Card>)}
-                      </div>
-                    </div>
-
-                    <div>
-                      <p className="text-muted-foreground mb-4">Select your target platforms:</p>
-                      <div className="space-y-3 mb-6">
-                        {platforms.map(platform => <Card key={platform.id} className={`cursor-pointer transition-all duration-200 hover:shadow-runway card-runway ${profile.platforms?.includes(platform.id) ? 'ring-2 ring-primary bg-primary/10' : ''}`} onClick={() => handlePlatformToggle(platform.id)}>
-                            <CardContent className="p-4 flex items-center space-x-4">
-                              <platform.icon className={`w-8 h-8 ${platform.color}`} />
-                              <div className="flex-1">
-                                <h3 className="font-semibold">{platform.label}</h3>
-                              </div>
-                              <Checkbox checked={profile.platforms?.includes(platform.id)} disabled />
-                            </CardContent>
-                          </Card>)}
-                      </div>
-                    </div>
-
-                    <div className="space-y-4">
-                      <div>
-                        <label className="text-sm font-medium mb-2 block">Content Trendiness</label>
-                        <Slider value={[profile.trendiness || 70]} onValueChange={value => updateProfile({
-                      trendiness: value[0]
-                    })} max={100} step={10} className="mb-2" />
-                        <div className="flex justify-between text-xs text-muted-foreground">
-                          <span>Professional & Safe</span>
-                          <span>Trending & Viral</span>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <label className="text-sm font-medium">Auto-generate Captions</label>
-                          <p className="text-xs text-muted-foreground">Automatically add captions for accessibility</p>
-                        </div>
-                        <Switch checked={profile.autoCaptions} onCheckedChange={checked => updateProfile({
-                      autoCaptions: checked
-                    })} />
-                      </div>
-                    </div>
-                  </div>}
-
-                {/* Step 5: Social Connect */}
-                {currentStep === 5 && <div className="space-y-6">
                     <div className="text-center">
-                      <h3 className="text-lg font-semibold mb-2">Connect Your Accounts</h3>
+                      <h3 className="text-lg font-semibold mb-2">Connect Your Social Platforms</h3>
                       <p className="text-muted-foreground mb-6">
-                        Connect your social accounts to enable direct publishing
+                        Connect your social accounts to enable direct publishing and content optimization
                       </p>
                     </div>
 
                     <div className="space-y-3">
-                      {platforms.filter(p => profile.platforms?.includes(p.id)).map(platform => <Card key={platform.id} className="hover:shadow-runway transition-all duration-200 card-runway">
+                      {platforms.map(platform => <Card key={platform.id} className={`cursor-pointer transition-all duration-200 hover:shadow-runway card-runway ${profile.platforms?.includes(platform.id) ? 'ring-2 ring-primary bg-primary/10' : ''}`} onClick={() => handlePlatformToggle(platform.id)}>
                           <CardContent className="p-4 flex items-center justify-between">
                             <div className="flex items-center space-x-3">
-                              <platform.icon className={`w-6 h-6 ${platform.color}`} />
-                              <span className="font-medium">{platform.label}</span>
+                              <platform.icon className={`w-8 h-8 ${platform.color}`} />
+                              <div>
+                                <h3 className="font-semibold">{platform.label}</h3>
+                                <p className="text-sm text-muted-foreground">
+                                  {profile.platforms?.includes(platform.id) ? 'Connected' : 'Click to connect'}
+                                </p>
+                              </div>
                             </div>
-                            <Button variant="outline" size="sm">
-                              Connect
+                            <Button variant={profile.platforms?.includes(platform.id) ? "default" : "outline"} size="sm">
+                              {profile.platforms?.includes(platform.id) ? 'Connected' : 'Connect'}
                             </Button>
                           </CardContent>
                         </Card>)}
@@ -361,7 +261,7 @@ export default function Onboarding() {
 
                     <div className="text-center">
                       <Badge variant="secondary" className="px-4 py-2">
-                        You can skip this step and connect later
+                        You can connect more platforms later in settings
                       </Badge>
                     </div>
                   </div>}
