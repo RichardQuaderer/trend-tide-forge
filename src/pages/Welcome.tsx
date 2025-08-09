@@ -107,27 +107,6 @@ export default function Welcome() {
             </Button>
           </Link>
         </motion.div>
-
-        {/* Stats */}
-        <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.6, delay: 1 }}
-          className="mt-16 grid grid-cols-3 gap-8 max-w-md mx-auto"
-        >
-          <div className="text-center">
-            <div className="text-2xl font-bold text-foreground">10M+</div>
-            <div className="text-muted-foreground text-sm">Videos Created</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-foreground">98%</div>
-            <div className="text-muted-foreground text-sm">Go Viral</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-foreground">2.5B</div>
-            <div className="text-muted-foreground text-sm">Total Views</div>
-          </div>
-        </motion.div>
       </div>
     </div>
   );
