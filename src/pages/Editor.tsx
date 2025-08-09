@@ -298,8 +298,12 @@ export default function Editor() {
 
         {currentStep === "preview" ? (/* Video Preview Selection */
       <div className="space-y-6">
-            <div className="text-center">
-              <p className="text-muted-foreground">Select one or more video variations for further editing and A/B testing. Each video uses different tones and approaches.</p>
+            <div className="text-center space-y-4">
+              <p className="text-muted-foreground">Select the videos you would like to proceed with for editing and publishing. Each video uses different tones and approaches.</p>
+              <Button variant="outline" onClick={() => navigate('/generate')} className="gradient-primary text-white">
+                <RotateCcw className="w-4 h-4 mr-2" />
+                Generate New Videos
+              </Button>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
