@@ -462,7 +462,7 @@ export default function Publish() {
       <div className="flex justify-center pt-6">
         <Button size="lg" onClick={handlePublish} disabled={isPublishing} className="px-8">
           <Send className="w-4 h-4 mr-2" />
-          {isPublishing ? "Publishing..." : isABTesting ? "Start A/B Test" : "Publish Video"}
+          {isPublishing ? "Publishing..." : "Publish now"}
         </Button>
       </div>
     </div>;
