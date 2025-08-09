@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { 
   Play, 
   Pause, 
@@ -17,7 +19,11 @@ import {
   ArrowRight,
   Save,
   Smartphone,
-  Monitor
+  Monitor,
+  TrendingUp,
+  Shield,
+  Info,
+  CheckSquare
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -25,6 +31,9 @@ export default function Editor() {
   const { id } = useParams();
   const navigate = useNavigate();
   
+  const [currentStep, setCurrentStep] = useState("preview"); // "preview" or "edit"
+  const [selectedVideos, setSelectedVideos] = useState<number[]>([]);
+  const [selectedVideoForEdit, setSelectedVideoForEdit] = useState<number | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration] = useState(30); // 30 seconds
@@ -39,6 +48,46 @@ export default function Editor() {
     { id: 5, start: 18, end: 25, text: "And it only takes 5 minutes", style: "modern" },
     { id: 6, start: 25, end: 30, text: "Try it and thank me later! ✨", style: "modern" },
   ]);
+
+  // Mock video variations
+  const videoVariations = [
+    {
+      id: 1,
+      title: "Hook-First Approach",
+      tone: "Urgent & Curiosity-driven",
+      viralityScore: 87,
+      safetyScore: 92,
+      description: "Starts with mystery hook, builds suspense",
+      thumbnail: "gradient-to-br from-red-500 to-orange-500"
+    },
+    {
+      id: 2,
+      title: "Educational Style",
+      tone: "Informative & Professional",
+      viralityScore: 73,
+      safetyScore: 98,
+      description: "Clear step-by-step explanation format",
+      thumbnail: "gradient-to-br from-blue-500 to-cyan-500"
+    },
+    {
+      id: 3,
+      title: "Story-Driven",
+      tone: "Personal & Relatable",
+      viralityScore: 91,
+      safetyScore: 89,
+      description: "Personal transformation narrative",
+      thumbnail: "gradient-to-br from-purple-500 to-pink-500"
+    },
+    {
+      id: 4,
+      title: "Quick & Punchy",
+      tone: "Fast-paced & Energetic",
+      viralityScore: 95,
+      safetyScore: 85,
+      description: "Rapid-fire tips with visual effects",
+      thumbnail: "gradient-to-br from-green-500 to-teal-500"
+    }
+  ];
 
   const formats = [
     { id: "tiktok", label: "TikTok", ratio: "9:16", width: 270, height: 480 },
@@ -60,7 +109,42 @@ export default function Editor() {
   };
 
   const handleContinue = () => {
-    navigate(`/publish/${id}`);
+    if (currentStep === "preview") {
+      if (selectedVideos.length === 0) return;
+      setCurrentStep("edit");
+      setSelectedVideoForEdit(selectedVideos[0]);
+    } else {
+      navigate(`/publish/${id}`);
+    }
+  };
+
+  const toggleVideoSelection = (videoId: number) => {
+    setSelectedVideos(prev => 
+      prev.includes(videoId) 
+        ? prev.filter(id => id !== videoId)
+        : [...prev, videoId]
+    );
+  };
+
+  const getScoreColor = (score: number) => {
+    if (score >= 90) return "text-green-500";
+    if (score >= 75) return "text-yellow-500";
+    if (score >= 60) return "text-orange-500";
+    return "text-red-500";
+  };
+
+  const getScoreExplanation = (type: "virality" | "safety", score: number) => {
+    if (type === "virality") {
+      if (score >= 90) return "Excellent viral potential with strong hooks and engagement triggers";
+      if (score >= 75) return "Good viral potential with solid content structure";
+      if (score >= 60) return "Moderate viral potential, could benefit from stronger hooks";
+      return "Low viral potential, needs more engaging elements";
+    } else {
+      if (score >= 90) return "Very safe content with no policy violations";
+      if (score >= 75) return "Generally safe with minor considerations";
+      if (score >= 60) return "Mostly safe but may need content review";
+      return "Potential policy issues, needs content adjustment";
+    }
   };
 
   const updateCaptionText = (captionId: number, newText: string) => {
@@ -76,26 +160,146 @@ export default function Editor() {
   };
 
   return (
-    <div className="container max-w-7xl mx-auto px-4 py-6 space-y-8">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-gradient">Video Editor</h1>
-          <p className="text-muted-foreground mt-1">Fine-tune your viral content</p>
+    <TooltipProvider>
+      <div className="container max-w-7xl mx-auto px-4 py-6 space-y-8">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-gradient">
+              {currentStep === "preview" ? "Choose Your Video Style" : "Video Editor"}
+            </h1>
+            <p className="text-muted-foreground mt-1">
+              {currentStep === "preview" 
+                ? "Select video variations to A/B test and proceed to editing" 
+                : "Fine-tune your viral content"}
+            </p>
+          </div>
+          <div className="flex items-center gap-3">
+            {currentStep === "edit" && (
+              <Button variant="outline" onClick={handleSave}>
+                <Save className="w-4 h-4 mr-2" />
+                Save Draft
+              </Button>
+            )}
+            <Button 
+              onClick={handleContinue} 
+              className="gradient-primary text-white"
+              disabled={currentStep === "preview" && selectedVideos.length === 0}
+            >
+              {currentStep === "preview" ? "Edit Selected" : "Continue"}
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
+          </div>
         </div>
-        <div className="flex items-center gap-3">
-          <Button variant="outline" onClick={handleSave}>
-            <Save className="w-4 h-4 mr-2" />
-            Save Draft
-          </Button>
-          <Button onClick={handleContinue} className="gradient-primary text-white">
-            Continue
-            <ArrowRight className="w-4 h-4 ml-2" />
-          </Button>
-        </div>
-      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {currentStep === "preview" ? (
+          /* Video Preview Selection */
+          <div className="space-y-6">
+            <div className="text-center">
+              <p className="text-muted-foreground">
+                Select one or more video variations for A/B testing. Each uses different tones and approaches.
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {videoVariations.map((video) => (
+                <motion.div
+                  key={video.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: video.id * 0.1 }}
+                >
+                  <Card className={`cursor-pointer transition-all shadow-creator hover:shadow-creator-lg ${
+                    selectedVideos.includes(video.id) ? 'ring-2 ring-primary' : ''
+                  }`}>
+                    <CardContent className="p-6">
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="space-y-1 flex-1">
+                          <h3 className="font-semibold text-lg">{video.title}</h3>
+                          <Badge variant="secondary" className="text-xs">
+                            {video.tone}
+                          </Badge>
+                          <p className="text-sm text-muted-foreground">{video.description}</p>
+                        </div>
+                        <Checkbox
+                          checked={selectedVideos.includes(video.id)}
+                          onCheckedChange={() => toggleVideoSelection(video.id)}
+                          className="ml-4"
+                        />
+                      </div>
+                      
+                      {/* Video Preview */}
+                      <div className="mb-4">
+                        <div 
+                          className={`aspect-[9/16] w-32 mx-auto rounded-lg ${video.thumbnail} flex items-center justify-center relative overflow-hidden`}
+                        >
+                          <Play className="w-8 h-8 text-white opacity-75" />
+                          <div className="absolute inset-0 bg-black/20" />
+                        </div>
+                      </div>
+                      
+                      {/* Scores */}
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="text-center">
+                          <div className="flex items-center justify-center gap-2 mb-1">
+                            <TrendingUp className="w-4 h-4 text-primary" />
+                            <span className="text-sm font-medium">Virality</span>
+                            <Tooltip>
+                              <TooltipTrigger>
+                                <Info className="w-3 h-3 text-muted-foreground" />
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p className="max-w-xs">{getScoreExplanation("virality", video.viralityScore)}</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </div>
+                          <div className={`text-2xl font-bold ${getScoreColor(video.viralityScore)}`}>
+                            {video.viralityScore}%
+                          </div>
+                        </div>
+                        
+                        <div className="text-center">
+                          <div className="flex items-center justify-center gap-2 mb-1">
+                            <Shield className="w-4 h-4 text-primary" />
+                            <span className="text-sm font-medium">Safety</span>
+                            <Tooltip>
+                              <TooltipTrigger>
+                                <Info className="w-3 h-3 text-muted-foreground" />
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p className="max-w-xs">{getScoreExplanation("safety", video.safetyScore)}</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </div>
+                          <div className={`text-2xl font-bold ${getScoreColor(video.safetyScore)}`}>
+                            {video.safetyScore}%
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+            
+            {selectedVideos.length > 0 && (
+              <Card className="bg-muted/50">
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-2 text-sm">
+                    <CheckSquare className="w-4 h-4 text-primary" />
+                    <span className="font-medium">A/B Testing:</span>
+                    <span>{selectedVideos.length} variation{selectedVideos.length > 1 ? 's' : ''} selected</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    These variations will be tested across your selected platforms to find the best performer.
+                  </p>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        ) : (
+          /* Video Editing Interface */
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Left Column - Video Preview */}
         <div className="lg:col-span-2 space-y-6">
           {/* Video Player */}
@@ -322,7 +526,9 @@ export default function Editor() {
             </CardContent>
           </Card>
         </div>
+          </div>
+        )}
       </div>
-    </div>
+    </TooltipProvider>
   );
 }
