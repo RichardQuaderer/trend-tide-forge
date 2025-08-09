@@ -13,7 +13,11 @@ import {
   Copy,
   Edit,
   MoreHorizontal,
-  Calendar
+  Calendar,
+  Target,
+  Trophy,
+  BarChart3,
+  Users
 } from "lucide-react";
 import { api } from "@/lib/api";
 import { motion } from "framer-motion";
@@ -301,6 +305,138 @@ export default function Analytics() {
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Campaign A/B Testing Deep Dive */}
+      <Card className="shadow-creator">
+        <CardHeader>
+          <CardTitle className="flex items-center space-x-2">
+            <Target className="w-5 h-5 text-primary" />
+            <span>Campaign A/B Test Results</span>
+          </CardTitle>
+          <p className="text-sm text-muted-foreground">
+            Deep dive into your past campaign performance and test outcomes
+          </p>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-6">
+            {analytics?.campaigns.map((campaign) => (
+              <div key={campaign.id} className="border rounded-lg p-6 space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="font-semibold text-lg">{campaign.name}</h3>
+                    <p className="text-sm text-muted-foreground">{campaign.description}</p>
+                    <div className="flex items-center gap-4 mt-2">
+                      <Badge variant="outline" className="text-xs">
+                        {campaign.testType} Test
+                      </Badge>
+                      <Badge 
+                        variant={campaign.status === 'Completed' ? 'default' : campaign.status === 'Active' ? 'secondary' : 'outline'}
+                        className="text-xs"
+                      >
+                        {campaign.status}
+                      </Badge>
+                      <span className="text-xs text-muted-foreground">
+                        {campaign.startDate} {campaign.endDate && `- ${campaign.endDate}`}
+                      </span>
+                    </div>
+                  </div>
+                  {campaign.winner && (
+                    <div className="flex items-center gap-2 text-green-600">
+                      <Trophy className="w-4 h-4" />
+                      <span className="text-sm font-medium">Winner: {campaign.variants.find(v => v.id === campaign.winner)?.name}</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Variants Comparison */}
+                <div className="grid gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {campaign.variants.map((variant) => (
+                      <motion.div
+                        key={variant.id}
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className={`border rounded-lg p-4 ${campaign.winner === variant.id ? 'border-green-500 bg-green-50/50' : 'border-border'}`}
+                      >
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-between">
+                            <h4 className="font-medium">{variant.name}</h4>
+                            {campaign.winner === variant.id && (
+                              <Badge className="bg-green-100 text-green-700 text-xs">
+                                Winner
+                              </Badge>
+                            )}
+                          </div>
+                          
+                          <div className="text-sm text-muted-foreground bg-muted/30 p-3 rounded">
+                            "{variant.hookText}"
+                          </div>
+
+                          <div className="grid grid-cols-2 gap-3 text-sm">
+                            <div>
+                              <div className="flex items-center gap-1">
+                                <Eye className="w-3 h-3" />
+                                <span className="text-xs text-muted-foreground">Views</span>
+                              </div>
+                              <p className="font-medium">{formatNumber(variant.views)}</p>
+                            </div>
+                            <div>
+                              <div className="flex items-center gap-1">
+                                <MousePointer className="w-3 h-3" />
+                                <span className="text-xs text-muted-foreground">CTR</span>
+                              </div>
+                              <p className="font-medium">{variant.ctr}%</p>
+                            </div>
+                            <div>
+                              <div className="flex items-center gap-1">
+                                <Users className="w-3 h-3" />
+                                <span className="text-xs text-muted-foreground">Clicks</span>
+                              </div>
+                              <p className="font-medium">{formatNumber(variant.clicks)}</p>
+                            </div>
+                            <div>
+                              <div className="flex items-center gap-1">
+                                <TrendingUp className="w-3 h-3" />
+                                <span className="text-xs text-muted-foreground">Conv Rate</span>
+                              </div>
+                              <p className="font-medium">{variant.conversionRate}%</p>
+                            </div>
+                          </div>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+
+                  {/* Performance Summary */}
+                  {campaign.status === 'Completed' && campaign.winner && (
+                    <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
+                      <h5 className="font-medium text-primary mb-2">Test Results Summary</h5>
+                      <div className="text-sm space-y-1">
+                        {(() => {
+                          const winner = campaign.variants.find(v => v.id === campaign.winner);
+                          const other = campaign.variants.find(v => v.id !== campaign.winner);
+                          if (!winner || !other) return null;
+                          
+                          const ctrImprovement = ((winner.ctr - other.ctr) / other.ctr * 100).toFixed(1);
+                          const convImprovement = ((winner.conversionRate - other.conversionRate) / other.conversionRate * 100).toFixed(1);
+                          
+                          return (
+                            <>
+                              <p>• <strong>{winner.name}</strong> outperformed by <strong>{ctrImprovement}%</strong> in CTR</p>
+                              <p>• Conversion rate improvement: <strong>{convImprovement}%</strong></p>
+                              <p>• Total additional conversions: <strong>{winner.conversions - other.conversions}</strong></p>
+                            </>
+                          );
+                        })()}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             ))}
           </div>

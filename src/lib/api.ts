@@ -37,6 +37,27 @@ export interface AnalyticsData {
     percentage: number;
   }>;
   bestHook: string;
+  campaigns: Array<{
+    id: string;
+    name: string;
+    description: string;
+    testType: 'A/B' | 'Multivariate';
+    status: 'Active' | 'Completed' | 'Paused';
+    variants: Array<{
+      id: string;
+      name: string;
+      views: number;
+      clicks: number;
+      conversions: number;
+      ctr: number;
+      conversionRate: number;
+      hookText: string;
+      thumbnail: string;
+    }>;
+    startDate: string;
+    endDate?: string;
+    winner?: string;
+  }>;
 }
 
 export interface UserProfile {
@@ -154,6 +175,120 @@ const mockAnalytics: AnalyticsData = {
     { platform: 'YouTube', views: 28100, percentage: 10 },
   ],
   bestHook: "Wait for it... this will blow your mind 🤯",
+  campaigns: [
+    {
+      id: 'campaign_1',
+      name: 'Morning Routine Hook Test',
+      description: 'Testing different opening hooks for morning routine content',
+      testType: 'A/B',
+      status: 'Completed',
+      variants: [
+        {
+          id: 'variant_a',
+          name: 'Variant A - Question Hook',
+          views: 45000,
+          clicks: 5400,
+          conversions: 324,
+          ctr: 12.0,
+          conversionRate: 6.0,
+          hookText: "What if I told you there's a morning routine that changed everything?",
+          thumbnail: '/api/placeholder/200/300'
+        },
+        {
+          id: 'variant_b',
+          name: 'Variant B - Direct Statement',
+          views: 47000,
+          clicks: 6580,
+          conversions: 461,
+          ctr: 14.0,
+          conversionRate: 7.0,
+          hookText: "This 5-minute morning routine will transform your entire day",
+          thumbnail: '/api/placeholder/200/300'
+        }
+      ],
+      startDate: '2024-01-01',
+      endDate: '2024-01-15',
+      winner: 'variant_b'
+    },
+    {
+      id: 'campaign_2',
+      name: 'Productivity Thumbnail Test',
+      description: 'A/B testing different thumbnail styles for productivity content',
+      testType: 'A/B',
+      status: 'Completed',
+      variants: [
+        {
+          id: 'variant_a2',
+          name: 'Variant A - Face Focus',
+          views: 52000,
+          clicks: 4160,
+          conversions: 249,
+          ctr: 8.0,
+          conversionRate: 6.0,
+          hookText: "Stop wasting time with these 3 simple hacks",
+          thumbnail: '/api/placeholder/200/300'
+        },
+        {
+          id: 'variant_b2',
+          name: 'Variant B - Text Overlay',
+          views: 51500,
+          clicks: 5665,
+          conversions: 283,
+          ctr: 11.0,
+          conversionRate: 5.0,
+          hookText: "Stop wasting time with these 3 simple hacks",
+          thumbnail: '/api/placeholder/200/300'
+        }
+      ],
+      startDate: '2023-12-15',
+      endDate: '2024-01-05',
+      winner: 'variant_b2'
+    },
+    {
+      id: 'campaign_3',
+      name: 'AI Tools Title Test',
+      description: 'Testing different video titles for AI tools content',
+      testType: 'Multivariate',
+      status: 'Active',
+      variants: [
+        {
+          id: 'variant_a3',
+          name: 'Variant A - Number Focus',
+          views: 28000,
+          clicks: 2520,
+          conversions: 139,
+          ctr: 9.0,
+          conversionRate: 5.5,
+          hookText: "5 AI tools that will replace your job (use them first)",
+          thumbnail: '/api/placeholder/200/300'
+        },
+        {
+          id: 'variant_b3',
+          name: 'Variant B - Urgency Focus',
+          views: 31000,
+          clicks: 3410,
+          conversions: 186,
+          ctr: 11.0,
+          conversionRate: 5.5,
+          hookText: "AI tools everyone should know before it's too late",
+          thumbnail: '/api/placeholder/200/300'
+        },
+        {
+          id: 'variant_c3',
+          name: 'Variant C - Benefit Focus',
+          views: 26500,
+          clicks: 2915,
+          conversions: 175,
+          ctr: 11.0,
+          conversionRate: 6.0,
+          hookText: "These AI tools will 10x your productivity in 2024",
+          thumbnail: '/api/placeholder/200/300'
+        }
+      ],
+      startDate: '2024-01-10',
+      winner: undefined
+    }
+  ]
 };
 
 // API functions with simulated delays
