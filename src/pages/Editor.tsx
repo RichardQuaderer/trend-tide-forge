@@ -33,7 +33,8 @@ export default function Editor() {
   
   const [currentStep, setCurrentStep] = useState("preview"); // "preview" or "edit"
   const [selectedVideos, setSelectedVideos] = useState<number[]>([]);
-  const [selectedVideoForEdit, setSelectedVideoForEdit] = useState<number | null>(null);
+  const [currentEditingVideoIndex, setCurrentEditingVideoIndex] = useState(0);
+  const [editedVideos, setEditedVideos] = useState<Record<number, any>>({});
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration] = useState(30); // 30 seconds
@@ -112,9 +113,80 @@ export default function Editor() {
     if (currentStep === "preview") {
       if (selectedVideos.length === 0) return;
       setCurrentStep("edit");
-      setSelectedVideoForEdit(selectedVideos[0]);
+      setCurrentEditingVideoIndex(0);
     } else {
-      navigate(`/publish/${id}`);
+      // Save current video's edits before proceeding
+      const currentVideoId = selectedVideos[currentEditingVideoIndex];
+      setEditedVideos(prev => ({
+        ...prev,
+        [currentVideoId]: {
+          captions,
+          trimStart,
+          trimEnd,
+          selectedFormat
+        }
+      }));
+      
+      // Check if there are more videos to edit
+      if (currentEditingVideoIndex < selectedVideos.length - 1) {
+        const nextIndex = currentEditingVideoIndex + 1;
+        setCurrentEditingVideoIndex(nextIndex);
+        
+        // Load next video's data (or defaults)
+        const nextVideoId = selectedVideos[nextIndex];
+        const nextVideoData = editedVideos[nextVideoId];
+        if (nextVideoData) {
+          setCaptions(nextVideoData.captions);
+          setTrimStart(nextVideoData.trimStart);
+          setTrimEnd(nextVideoData.trimEnd);
+          setSelectedFormat(nextVideoData.selectedFormat);
+        } else {
+          // Reset to defaults for new video
+          setCaptions([
+            { id: 1, start: 0, end: 3, text: "Wait for it...", style: "modern" },
+            { id: 2, start: 3, end: 7, text: "This will blow your mind 🤯", style: "modern" },
+            { id: 3, start: 7, end: 12, text: "Here's the secret productivity hack", style: "modern" },
+            { id: 4, start: 12, end: 18, text: "That changed my entire life", style: "modern" },
+            { id: 5, start: 18, end: 25, text: "And it only takes 5 minutes", style: "modern" },
+            { id: 6, start: 25, end: 30, text: "Try it and thank me later! ✨", style: "modern" },
+          ]);
+          setTrimStart(0);
+          setTrimEnd(30);
+          setSelectedFormat("tiktok");
+        }
+      } else {
+        // All videos edited, proceed to publish
+        navigate(`/publish/${id}?abtest=${selectedVideos.join(',')}`);
+      }
+    }
+  };
+
+  const goToPreviousVideo = () => {
+    if (currentEditingVideoIndex > 0) {
+      // Save current video's edits
+      const currentVideoId = selectedVideos[currentEditingVideoIndex];
+      setEditedVideos(prev => ({
+        ...prev,
+        [currentVideoId]: {
+          captions,
+          trimStart,
+          trimEnd,
+          selectedFormat
+        }
+      }));
+      
+      const prevIndex = currentEditingVideoIndex - 1;
+      setCurrentEditingVideoIndex(prevIndex);
+      
+      // Load previous video's data
+      const prevVideoId = selectedVideos[prevIndex];
+      const prevVideoData = editedVideos[prevVideoId];
+      if (prevVideoData) {
+        setCaptions(prevVideoData.captions);
+        setTrimStart(prevVideoData.trimStart);
+        setTrimEnd(prevVideoData.trimEnd);
+        setSelectedFormat(prevVideoData.selectedFormat);
+      }
     }
   };
 
@@ -171,22 +243,34 @@ export default function Editor() {
             <p className="text-muted-foreground mt-1">
               {currentStep === "preview" 
                 ? "Select video variations to A/B test and proceed to editing" 
-                : "Fine-tune your viral content"}
+                : `Editing video ${currentEditingVideoIndex + 1} of ${selectedVideos.length} - ${videoVariations.find(v => v.id === selectedVideos[currentEditingVideoIndex])?.title}`}
             </p>
           </div>
           <div className="flex items-center gap-3">
             {currentStep === "edit" && (
-              <Button variant="outline" onClick={handleSave}>
-                <Save className="w-4 h-4 mr-2" />
-                Save Draft
-              </Button>
+              <>
+                {currentEditingVideoIndex > 0 && (
+                  <Button variant="outline" onClick={goToPreviousVideo}>
+                    ← Previous Video
+                  </Button>
+                )}
+                <Button variant="outline" onClick={handleSave}>
+                  <Save className="w-4 h-4 mr-2" />
+                  Save Draft
+                </Button>
+              </>
             )}
             <Button 
               onClick={handleContinue} 
               className="gradient-primary text-white"
               disabled={currentStep === "preview" && selectedVideos.length === 0}
             >
-              {currentStep === "preview" ? "Edit Selected" : "Continue"}
+              {currentStep === "preview" 
+                ? "Edit Selected" 
+                : currentEditingVideoIndex < selectedVideos.length - 1 
+                  ? "Next Video →" 
+                  : "Continue to Publish"
+              }
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </div>
