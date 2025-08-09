@@ -11,6 +11,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Slider } from "@/components/ui/slider";
 import { Share2, Calendar as CalendarIcon, Clock, Send, Check, Copy, Zap, Hash, Play, FlaskConical, Target, BarChart3, Settings, ChevronDown } from "lucide-react";
 import { motion } from "framer-motion";
 import { useMutation } from "@tanstack/react-query";
@@ -70,6 +71,7 @@ export default function Publish() {
   const [abTestDuration, setAbTestDuration] = useState(24); // hours
   const [abTestTrafficSplit, setAbTestTrafficSplit] = useState(50); // percentage
   const [abTestExpanded, setAbTestExpanded] = useState(false);
+  const [selectedVideoIndex, setSelectedVideoIndex] = useState(0); // For video slider
 
   // Initialize A/B test platform distribution
   useEffect(() => {
@@ -212,14 +214,42 @@ export default function Publish() {
               </div>
             </div>
           </div>
-          {isABTesting && <div className="mt-4 text-center">
-              <p className="text-sm text-muted-foreground">
-                Testing {abTestVideos.length} video variations
-              </p>
-              <div className="flex justify-center gap-2 mt-2">
-                {abTestVideos.map((videoId, index) => <Badge key={videoId} variant="outline" className="text-xs">
-                    V{index + 1}
-                  </Badge>)}
+          {isABTesting && <div className="mt-6 space-y-4">
+              <div className="text-center">
+                <p className="text-sm text-muted-foreground mb-3">
+                  Testing {abTestVideos.length} video variations
+                </p>
+                <div className="flex justify-center gap-2 mb-4">
+                  {abTestVideos.map((videoId, index) => <Badge 
+                      key={videoId} 
+                      variant={selectedVideoIndex === index ? "default" : "outline"} 
+                      className="text-xs cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors"
+                      onClick={() => setSelectedVideoIndex(index)}
+                    >
+                      V{index + 1}
+                    </Badge>)}
+                </div>
+              </div>
+              
+              <div className="space-y-3">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground">V1</span>
+                  <span className="font-medium">Video {selectedVideoIndex + 1} of {abTestVideos.length}</span>
+                  <span className="text-muted-foreground">V{abTestVideos.length}</span>
+                </div>
+                <Slider
+                  value={[selectedVideoIndex]}
+                  onValueChange={(value) => setSelectedVideoIndex(value[0])}
+                  max={abTestVideos.length - 1}
+                  step={1}
+                  className="w-full"
+                />
+              </div>
+              
+              <div className="text-center">
+                <p className="text-xs text-muted-foreground">
+                  Current: {abTestVideos[selectedVideoIndex] === 3 ? "Hook-First Style" : abTestVideos[selectedVideoIndex] === 4 ? "Educational Style" : "Story-Driven Style"}
+                </p>
               </div>
             </div>}
         </CardContent>
