@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
@@ -17,7 +18,9 @@ import {
   Target,
   Trophy,
   BarChart3,
-  Users
+  Users,
+  Check,
+  X
 } from "lucide-react";
 import { api } from "@/lib/api";
 import { motion } from "framer-motion";
@@ -29,6 +32,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export default function Analytics() {
+  const [campaignFilter, setCampaignFilter] = useState<'all' | 'active' | 'completed'>('all');
+  const [editingCampaign, setEditingCampaign] = useState<string | null>(null);
+  const [editedTitles, setEditedTitles] = useState<Record<string, string>>({});
+
   const { data: analytics } = useQuery({
     queryKey: ['analytics'],
     queryFn: api.getAnalytics,
@@ -45,6 +52,31 @@ export default function Analytics() {
     if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
     if (num >= 1000) return `${(num / 1000).toFixed(1)}K`;
     return num.toString();
+  };
+
+  const filteredCampaigns = analytics?.campaigns.filter(campaign => {
+    if (campaignFilter === 'all') return true;
+    if (campaignFilter === 'active') return campaign.status === 'Active';
+    if (campaignFilter === 'completed') return campaign.status === 'Completed';
+    return true;
+  }) || [];
+
+  const handleTitleEdit = (campaignId: string, newTitle: string) => {
+    setEditedTitles(prev => ({ ...prev, [campaignId]: newTitle }));
+  };
+
+  const saveTitleEdit = (campaignId: string) => {
+    // Here you would typically call an API to save the title
+    console.log('Saving title for campaign:', campaignId, editedTitles[campaignId]);
+    setEditingCampaign(null);
+  };
+
+  const cancelTitleEdit = (campaignId: string) => {
+    setEditedTitles(prev => {
+      const { [campaignId]: _, ...rest } = prev;
+      return rest;
+    });
+    setEditingCampaign(null);
   };
 
   const kpiCards = [
@@ -314,21 +346,95 @@ export default function Analytics() {
       {/* Campaign A/B Testing Deep Dive */}
       <Card className="shadow-creator">
         <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <Target className="w-5 h-5 text-primary" />
-            <span>Campaign A/B Test Results</span>
-          </CardTitle>
-          <p className="text-sm text-muted-foreground">
-            Deep dive into your past campaign performance and test outcomes
-          </p>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="flex items-center space-x-2">
+                <Target className="w-5 h-5 text-primary" />
+                <span>Campaign A/B Test Results</span>
+              </CardTitle>
+              <p className="text-sm text-muted-foreground">
+                Deep dive into your past campaign performance and test outcomes
+              </p>
+            </div>
+            
+            {/* Filter Controls */}
+            <div className="flex items-center gap-2">
+              <div className="flex bg-muted rounded-lg p-1">
+                <Button
+                  variant={campaignFilter === 'all' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setCampaignFilter('all')}
+                  className="text-xs h-7"
+                >
+                  All
+                </Button>
+                <Button
+                  variant={campaignFilter === 'active' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setCampaignFilter('active')}
+                  className="text-xs h-7"
+                >
+                  Active
+                </Button>
+                <Button
+                  variant={campaignFilter === 'completed' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setCampaignFilter('completed')}
+                  className="text-xs h-7"
+                >
+                  Completed
+                </Button>
+              </div>
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
           <div className="space-y-6">
-            {analytics?.campaigns.map((campaign) => (
+            {filteredCampaigns.map((campaign) => (
               <div key={campaign.id} className="border rounded-lg p-6 space-y-4">
                 <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="font-semibold text-lg">{campaign.name}</h3>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 group">
+                      {editingCampaign === campaign.id ? (
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="text"
+                            value={editedTitles[campaign.id] || campaign.name}
+                            onChange={(e) => handleTitleEdit(campaign.id, e.target.value)}
+                            className="font-semibold text-lg bg-background border border-border rounded px-2 py-1"
+                            autoFocus
+                          />
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => saveTitleEdit(campaign.id)}
+                            className="h-6 w-6 p-0"
+                          >
+                            <Check className="w-3 h-3 text-green-600" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => cancelTitleEdit(campaign.id)}
+                            className="h-6 w-6 p-0"
+                          >
+                            <X className="w-3 h-3 text-red-600" />
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          <h3 className="font-semibold text-lg">{editedTitles[campaign.id] || campaign.name}</h3>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => setEditingCampaign(campaign.id)}
+                            className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                          >
+                            <Edit className="w-3 h-3" />
+                          </Button>
+                        </div>
+                      )}
+                    </div>
                     <p className="text-sm text-muted-foreground">{campaign.description}</p>
                     <div className="flex items-center gap-4 mt-2">
                       <Badge variant="outline" className="text-xs">
