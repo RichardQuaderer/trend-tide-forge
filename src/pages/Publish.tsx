@@ -17,7 +17,6 @@ import { useMutation } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
-
 const platforms = [{
   id: "tiktok",
   label: "TikTok",
@@ -40,20 +39,21 @@ const platforms = [{
   connected: false,
   maxLength: 2200
 }];
-
 const trendingHashtags = ["#viral", "#fyp", "#trending", "#2024", "#productivity", "#lifehack", "#motivation", "#tutorial", "#tips", "#hack"];
-
 export default function Publish() {
-  const { id } = useParams();
+  const {
+    id
+  } = useParams();
   const navigate = useNavigate();
-  const { toast } = useToast();
+  const {
+    toast
+  } = useToast();
   const [searchParams] = useSearchParams();
 
   // Check if this is A/B testing mode
   const abTestParam = searchParams.get('abtest');
   const abTestVideos = abTestParam ? abTestParam.split(',').map(Number) : [];
   const isABTesting = abTestVideos.length > 1;
-
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>(["tiktok", "youtube"]);
   const [title, setTitle] = useState("How to be productive in 2024 - the ultimate guide");
   const [description, setDescription] = useState("This productivity hack will change your life! Try it and thank me later ✨ #productivity #lifehack #viral");
@@ -87,7 +87,6 @@ export default function Publish() {
       setABTestPlatforms(initialDistribution);
     }
   }, [isABTesting, abTestVideos]);
-
   const publishMutation = useMutation({
     mutationFn: (data: any) => api.publishVideo(data.videoId, data.platforms, data.metadata),
     onSuccess: () => {
@@ -100,28 +99,23 @@ export default function Publish() {
       }, 2000);
     }
   });
-
   const togglePlatform = (platformId: string) => {
     setSelectedPlatforms(prev => prev.includes(platformId) ? prev.filter(p => p !== platformId) : [...prev, platformId]);
   };
-
   const addHashtag = (hashtag: string) => {
     if (!hashtags.includes(hashtag)) {
       setHashtags([...hashtags, hashtag]);
     }
   };
-
   const removeHashtag = (hashtag: string) => {
     setHashtags(hashtags.filter(h => h !== hashtag));
   };
-
   const updateABTestPlatforms = (videoId: number, platforms: string[]) => {
     setABTestPlatforms(prev => ({
       ...prev,
       [videoId]: platforms
     }));
   };
-
   const handlePublish = () => {
     if (!isABTesting && selectedPlatforms.length === 0) {
       toast({
@@ -131,7 +125,6 @@ export default function Publish() {
       });
       return;
     }
-
     if (isABTesting) {
       const hasValidDistribution = Object.values(abTestPlatforms).some(platforms => platforms.length > 0);
       if (!hasValidDistribution) {
@@ -143,7 +136,6 @@ export default function Publish() {
         return;
       }
     }
-
     setIsPublishing(true);
     const platformsToPublish = isABTesting ? Object.values(abTestPlatforms).flat() : selectedPlatforms;
 
@@ -165,7 +157,6 @@ export default function Publish() {
         }, 200);
       }, index * 500);
     });
-
     const metadata = {
       title,
       description: description + " " + hashtags.join(" "),
@@ -181,23 +172,19 @@ export default function Publish() {
         videos: abTestVideos
       } : undefined
     };
-
     publishMutation.mutate({
       videoId: id,
       platforms: platformsToPublish,
       metadata
     });
   };
-
   const generateVariant = () => {
     toast({
       title: "Discovering trends for variant...",
       description: "Analyzing viral patterns to create an optimized version"
     });
   };
-
-  return (
-    <div className="container max-w-4xl mx-auto px-4 py-6 space-y-8">
+  return <div className="container max-w-4xl mx-auto px-4 py-6 space-y-8">
       {/* Header */}
       <div className="text-center space-y-4">
         <h1 className="text-3xl font-bold text-gradient">
@@ -225,20 +212,16 @@ export default function Publish() {
               </div>
             </div>
           </div>
-          {isABTesting && (
-            <div className="mt-4 text-center">
+          {isABTesting && <div className="mt-4 text-center">
               <p className="text-sm text-muted-foreground">
                 Testing {abTestVideos.length} video variations
               </p>
               <div className="flex justify-center gap-2 mt-2">
-                {abTestVideos.map((videoId, index) => (
-                  <Badge key={videoId} variant="outline" className="text-xs">
+                {abTestVideos.map((videoId, index) => <Badge key={videoId} variant="outline" className="text-xs">
                     V{index + 1}
-                  </Badge>
-                ))}
+                  </Badge>)}
               </div>
-            </div>
-          )}
+            </div>}
         </CardContent>
       </Card>
 
@@ -261,19 +244,15 @@ export default function Publish() {
           <div>
             <label className="text-sm font-medium mb-2 block">Hashtags</label>
             <div className="flex flex-wrap gap-2 mb-3">
-              {hashtags.map(hashtag => (
-                <Badge key={hashtag} variant="secondary" className="cursor-pointer hover:bg-destructive hover:text-destructive-foreground" onClick={() => removeHashtag(hashtag)}>
+              {hashtags.map(hashtag => <Badge key={hashtag} variant="secondary" className="cursor-pointer hover:bg-destructive hover:text-destructive-foreground" onClick={() => removeHashtag(hashtag)}>
                   {hashtag} ×
-                </Badge>
-              ))}
+                </Badge>)}
             </div>
             <div className="flex flex-wrap gap-2">
-              {trendingHashtags.filter(tag => !hashtags.includes(tag)).map(hashtag => (
-                <Badge key={hashtag} variant="outline" className="cursor-pointer hover:bg-primary hover:text-primary-foreground" onClick={() => addHashtag(hashtag)}>
+              {trendingHashtags.filter(tag => !hashtags.includes(tag)).map(hashtag => <Badge key={hashtag} variant="outline" className="cursor-pointer hover:bg-primary hover:text-primary-foreground" onClick={() => addHashtag(hashtag)}>
                   <Hash className="w-3 h-3 mr-1" />
                   {hashtag.substring(1)}
-                </Badge>
-              ))}
+                </Badge>)}
             </div>
           </div>
         </CardContent>
@@ -287,55 +266,11 @@ export default function Publish() {
             <span>Platforms</span>
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="mb-4">
-            <p className="text-sm text-muted-foreground">
-              {isABTesting ? "Platform assignment configured in A/B test settings below" : `Selected: ${selectedPlatforms.map(id => platforms.find(p => p.id === id)?.label).join(', ')}`}
-            </p>
-          </div>
-          {!isABTesting ? (
-            <div className="grid grid-cols-1 gap-3">
-              {platforms.map(platform => (
-                <motion.div
-                  key={platform.id}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className={`border rounded-lg p-4 cursor-pointer transition-all ${
-                    selectedPlatforms.includes(platform.id) 
-                      ? 'border-primary bg-primary/5' 
-                      : 'border-muted hover:border-muted-foreground/50'
-                  } ${!platform.connected ? 'opacity-50' : ''}`}
-                  onClick={() => platform.connected && togglePlatform(platform.id)}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <platform.icon className={`w-5 h-5 ${platform.color}`} />
-                      <div>
-                        <div className="font-medium">{platform.label}</div>
-                        <div className="text-xs text-muted-foreground">
-                          {platform.connected ? `Max ${platform.maxLength} characters` : 'Not connected'}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      {selectedPlatforms.includes(platform.id) && <Check className="w-4 h-4 text-primary" />}
-                      {!platform.connected && <Badge variant="secondary">Connect</Badge>}
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-sm text-muted-foreground">
-              Platform assignment is configured in the A/B test settings below.
-            </div>
-          )}
-        </CardContent>
+        
       </Card>
 
       {/* A/B Testing Configuration - Collapsible */}
-      {isABTesting && (
-        <Collapsible open={abTestExpanded} onOpenChange={setAbTestExpanded}>
+      {isABTesting && <Collapsible open={abTestExpanded} onOpenChange={setAbTestExpanded}>
           <Card className="shadow-creator">
             <CollapsibleTrigger asChild>
               <CardHeader className="cursor-pointer hover:bg-muted/50 transition-colors">
@@ -385,19 +320,16 @@ export default function Publish() {
                     </Select>
                   </div>
 
-                  {abTestStrategy === "content" && (
-                    <div>
+                  {abTestStrategy === "content" && <div>
                       <label className="text-sm font-medium mb-2 block">Traffic Split (%)</label>
                       <Input type="number" min="10" max="90" value={abTestTrafficSplit} onChange={e => setAbTestTrafficSplit(Number(e.target.value))} />
-                    </div>
-                  )}
+                    </div>}
                 </div>
 
                 {/* Video Platform Assignment */}
                 <div className="space-y-4">
                   <h4 className="font-medium">Platform Assignment</h4>
-                  {abTestVideos.map((videoId, index) => (
-                    <Card key={videoId} className="p-4">
+                  {abTestVideos.map((videoId, index) => <Card key={videoId} className="p-4">
                       <div className="flex items-center justify-between mb-3">
                         <div>
                           <h5 className="font-medium">Video Variation {index + 1}</h5>
@@ -410,32 +342,24 @@ export default function Publish() {
                       <div className="space-y-2">
                         <p className="text-sm font-medium">Assigned Platforms:</p>
                         <div className="flex flex-wrap gap-2">
-                          {platforms.map(platform => (
-                            <label key={platform.id} className="flex items-center space-x-2 text-sm">
-                              <Checkbox 
-                                checked={(abTestPlatforms[videoId] || []).includes(platform.id)} 
-                                onCheckedChange={checked => {
-                                  const current = abTestPlatforms[videoId] || [];
-                                  const updated = checked ? [...current, platform.id] : current.filter(p => p !== platform.id);
-                                  updateABTestPlatforms(videoId, updated);
-                                }} 
-                                disabled={!platform.connected} 
-                              />
+                          {platforms.map(platform => <label key={platform.id} className="flex items-center space-x-2 text-sm">
+                              <Checkbox checked={(abTestPlatforms[videoId] || []).includes(platform.id)} onCheckedChange={checked => {
+                        const current = abTestPlatforms[videoId] || [];
+                        const updated = checked ? [...current, platform.id] : current.filter(p => p !== platform.id);
+                        updateABTestPlatforms(videoId, updated);
+                      }} disabled={!platform.connected} />
                               <span className={platform.connected ? "" : "opacity-50"}>
                                 {platform.label}
                               </span>
-                            </label>
-                          ))}
+                            </label>)}
                         </div>
                       </div>
-                    </Card>
-                  ))}
+                    </Card>)}
                 </div>
               </CardContent>
             </CollapsibleContent>
           </Card>
-        </Collapsible>
-      )}
+        </Collapsible>}
 
       {/* Schedule */}
       <Card className="shadow-creator">
@@ -458,33 +382,25 @@ export default function Publish() {
             </div>
           </div>
 
-          {!publishNow && (
-            <div className="space-y-4 pl-6 border-l-2 border-muted">
+          {!publishNow && <div className="space-y-4 pl-6 border-l-2 border-muted">
               <div className="space-y-3">
                 <div className="flex items-center space-x-3">
-                  <Checkbox 
-                    checked={useAIScheduling} 
-                    onCheckedChange={checked => {
-                      setUseAIScheduling(Boolean(checked));
-                      if (checked) setScheduleDate(undefined);
-                    }} 
-                  />
+                  <Checkbox checked={useAIScheduling} onCheckedChange={checked => {
+                setUseAIScheduling(Boolean(checked));
+                if (checked) setScheduleDate(undefined);
+              }} />
                   <label className="font-medium text-sm">Let AI choose the ideal time to post</label>
                 </div>
                 
                 <div className="flex items-center space-x-3">
-                  <Checkbox 
-                    checked={!useAIScheduling} 
-                    onCheckedChange={checked => {
-                      setUseAIScheduling(!Boolean(checked));
-                    }} 
-                  />
+                  <Checkbox checked={!useAIScheduling} onCheckedChange={checked => {
+                setUseAIScheduling(!Boolean(checked));
+              }} />
                   <label className="font-medium text-sm">Pick specific date & time</label>
                 </div>
               </div>
 
-              {useAIScheduling ? (
-                <div className="bg-muted/50 p-3 rounded-lg">
+              {useAIScheduling ? <div className="bg-muted/50 p-3 rounded-lg">
                   <div className="flex items-center gap-2 mb-2">
                     <Zap className="w-4 h-4 text-primary" />
                     <span className="text-sm font-medium">AI Optimal Scheduling</span>
@@ -492,9 +408,7 @@ export default function Publish() {
                   <p className="text-xs text-muted-foreground">
                     Our AI will analyze your audience activity patterns, platform algorithms, and content type to determine the best posting time for maximum engagement.
                   </p>
-                </div>
-              ) : (
-                <Popover>
+                </div> : <Popover>
                   <PopoverTrigger asChild>
                     <Button variant="outline" className="w-full justify-start">
                       <CalendarIcon className="w-4 h-4 mr-2" />
@@ -504,16 +418,13 @@ export default function Publish() {
                   <PopoverContent className="w-auto p-0">
                     <Calendar mode="single" selected={scheduleDate} onSelect={setScheduleDate} initialFocus />
                   </PopoverContent>
-                </Popover>
-              )}
-            </div>
-          )}
+                </Popover>}
+            </div>}
         </CardContent>
       </Card>
 
       {/* Publishing Progress */}
-      {isPublishing && (
-        <Card className="shadow-creator">
+      {isPublishing && <Card className="shadow-creator">
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
               <Target className="w-5 h-5 text-primary" />
@@ -523,10 +434,9 @@ export default function Publish() {
           <CardContent>
             <div className="space-y-4">
               {(isABTesting ? Object.values(abTestPlatforms).flat() : selectedPlatforms).map(platformId => {
-                const platform = platforms.find(p => p.id === platformId);
-                const progress = publishProgress[platformId] || 0;
-                return (
-                  <div key={platformId} className="space-y-2">
+            const platform = platforms.find(p => p.id === platformId);
+            const progress = publishProgress[platformId] || 0;
+            return <div key={platformId} className="space-y-2">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
                         {platform && <platform.icon className={`w-4 h-4 ${platform.color}`} />}
@@ -535,26 +445,18 @@ export default function Publish() {
                       <span className="text-sm text-muted-foreground">{Math.round(progress)}%</span>
                     </div>
                     <Progress value={progress} className="h-2" />
-                  </div>
-                );
-              })}
+                  </div>;
+          })}
             </div>
           </CardContent>
-        </Card>
-      )}
+        </Card>}
 
       {/* Publish Button */}
       <div className="flex justify-center pt-6">
-        <Button 
-          size="lg" 
-          onClick={handlePublish} 
-          disabled={isPublishing}
-          className="px-8"
-        >
+        <Button size="lg" onClick={handlePublish} disabled={isPublishing} className="px-8">
           <Send className="w-4 h-4 mr-2" />
           {isPublishing ? "Publishing..." : isABTesting ? "Start A/B Test" : "Publish Video"}
         </Button>
       </div>
-    </div>
-  );
+    </div>;
 }
