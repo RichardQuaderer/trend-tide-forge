@@ -45,11 +45,11 @@ const goals = [
 ];
 
 const styles = [
-  { id: "meme", label: "Meme", desc: "Funny, relatable content", color: "bg-runway-gold" },
-  { id: "cinematic", label: "Cinematic", desc: "High-quality, dramatic", color: "bg-runway-purple" },
-  { id: "fast-cut", label: "Fast-cut", desc: "Quick, energetic editing", color: "bg-runway-magenta" },
-  { id: "explainer", label: "Explainer", desc: "Educational, clear", color: "bg-runway-teal" },
-  { id: "product", label: "Product Showcase", desc: "Professional, commercial", color: "bg-runway-purple" },
+  { id: "meme", label: "Meme", desc: "Funny, relatable content", color: "bg-black", iconColor: "text-white" },
+  { id: "cinematic", label: "Cinematic", desc: "High-quality, dramatic", color: "bg-gray-800", iconColor: "text-white" },
+  { id: "fast-cut", label: "Fast-cut", desc: "Quick, energetic editing", color: "bg-gray-700", iconColor: "text-white" },
+  { id: "explainer", label: "Explainer", desc: "Educational, clear", color: "bg-gray-600", iconColor: "text-white" },
+  { id: "product", label: "Product Showcase", desc: "Professional, commercial", color: "bg-gray-900", iconColor: "text-white" },
 ];
 
 const platforms = [
@@ -271,7 +271,7 @@ export default function Onboarding() {
                           >
                             <CardContent className="p-4 flex items-center space-x-4">
                               <div className={`w-12 h-12 rounded-xl ${style.color} flex items-center justify-center`}>
-                                <Palette className="w-6 h-6 text-white" />
+                                <Palette className={`w-6 h-6 ${style.iconColor}`} />
                               </div>
                               <div>
                                 <h3 className="font-semibold">{style.label}</h3>
