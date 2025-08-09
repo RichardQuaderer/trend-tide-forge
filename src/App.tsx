@@ -14,10 +14,10 @@ import Publish from "./pages/Publish";
 import NotFound from "./pages/NotFound";
 
 const App = () => (
-  <TooltipProvider>
-    <Toaster />
-    <Sonner />
-    <BrowserRouter>
+  <BrowserRouter>
+    <TooltipProvider>
+      <Toaster />
+      <Sonner />
       <Routes>
         <Route path="/welcome" element={<Welcome />} />
         <Route path="/onboarding" element={<Onboarding />} />
@@ -32,8 +32,8 @@ const App = () => (
         <Route path="/" element={<Welcome />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
-    </BrowserRouter>
-  </TooltipProvider>
+    </TooltipProvider>
+  </BrowserRouter>
 );
 
 export default App;
