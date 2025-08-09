@@ -81,6 +81,7 @@ export default function Publish() {
   const [hashtags, setHashtags] = useState<string[]>(["#productivity", "#lifehack", "#viral"]);
   const [scheduleDate, setScheduleDate] = useState<Date>();
   const [publishNow, setPublishNow] = useState(true);
+  const [useAIScheduling, setUseAIScheduling] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
   const [publishProgress, setPublishProgress] = useState<Record<string, number>>({});
   
@@ -193,7 +194,8 @@ export default function Publish() {
       title,
       description: description + " " + hashtags.join(" "),
       hashtags,
-      scheduledFor: publishNow ? null : scheduleDate,
+      scheduledFor: publishNow ? null : (useAIScheduling ? "AI_OPTIMAL" : scheduleDate),
+      useAIScheduling,
       isABTest: isABTesting,
       abTestConfig: isABTesting ? {
         strategy: abTestStrategy,
@@ -434,22 +436,59 @@ export default function Publish() {
                   </div>
 
                   {!publishNow && (
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button variant="outline" className="w-full justify-start">
-                          <CalendarIcon className="w-4 h-4 mr-2" />
-                          {scheduleDate ? format(scheduleDate, "PPP") : "Pick a date"}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0">
-                        <Calendar
-                          mode="single"
-                          selected={scheduleDate}
-                          onSelect={setScheduleDate}
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
+                    <div className="space-y-4 pl-6 border-l-2 border-muted">
+                      <div className="space-y-3">
+                        <div className="flex items-center space-x-3">
+                          <Checkbox
+                            checked={useAIScheduling}
+                            onCheckedChange={(checked) => {
+                              setUseAIScheduling(Boolean(checked));
+                              if (checked) setScheduleDate(undefined);
+                            }}
+                          />
+                          <label className="font-medium text-sm">Let AI choose the ideal time to post</label>
+                        </div>
+                        
+                        <div className="flex items-center space-x-3">
+                          <Checkbox
+                            checked={!useAIScheduling}
+                            onCheckedChange={(checked) => {
+                              setUseAIScheduling(!Boolean(checked));
+                            }}
+                          />
+                          <label className="font-medium text-sm">Pick specific date & time</label>
+                        </div>
+                      </div>
+
+                      {useAIScheduling ? (
+                        <div className="bg-muted/50 p-3 rounded-lg">
+                          <div className="flex items-center gap-2 mb-2">
+                            <Zap className="w-4 h-4 text-primary" />
+                            <span className="text-sm font-medium">AI Optimal Scheduling</span>
+                          </div>
+                          <p className="text-xs text-muted-foreground">
+                            Our AI will analyze your audience activity patterns, platform algorithms, and content type to determine the best posting time for maximum engagement.
+                          </p>
+                        </div>
+                      ) : (
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button variant="outline" className="w-full justify-start">
+                              <CalendarIcon className="w-4 h-4 mr-2" />
+                              {scheduleDate ? format(scheduleDate, "PPP") : "Pick a date"}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0">
+                            <Calendar
+                              mode="single"
+                              selected={scheduleDate}
+                              onSelect={setScheduleDate}
+                              initialFocus
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      )}
+                    </div>
                   )}
                 </CardContent>
               </Card>
@@ -679,43 +718,80 @@ export default function Publish() {
                 <span>Schedule</span>
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-3">
-                <div className="flex items-center space-x-3">
-                  <Checkbox
-                    checked={publishNow}
-                    onCheckedChange={(checked) => setPublishNow(Boolean(checked))}
-                  />
-                  <label className="font-medium">Publish now</label>
-                </div>
-                
-                <div className="flex items-center space-x-3">
-                  <Checkbox
-                    checked={!publishNow}
-                    onCheckedChange={(checked) => setPublishNow(!Boolean(checked))}
-                  />
-                  <label className="font-medium">Schedule for later</label>
-                </div>
-              </div>
+                <CardContent className="space-y-4">
+                  <div className="space-y-3">
+                    <div className="flex items-center space-x-3">
+                      <Checkbox
+                        checked={publishNow}
+                        onCheckedChange={(checked) => setPublishNow(Boolean(checked))}
+                      />
+                      <label className="font-medium">Publish now</label>
+                    </div>
+                    
+                    <div className="flex items-center space-x-3">
+                      <Checkbox
+                        checked={!publishNow}
+                        onCheckedChange={(checked) => setPublishNow(!Boolean(checked))}
+                      />
+                      <label className="font-medium">Schedule for later</label>
+                    </div>
+                  </div>
 
-              {!publishNow && (
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline" className="w-full justify-start">
-                      <CalendarIcon className="w-4 h-4 mr-2" />
-                      {scheduleDate ? format(scheduleDate, "PPP") : "Pick a date"}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={scheduleDate}
-                      onSelect={setScheduleDate}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-              )}
+                  {!publishNow && (
+                    <div className="space-y-4 pl-6 border-l-2 border-muted">
+                      <div className="space-y-3">
+                        <div className="flex items-center space-x-3">
+                          <Checkbox
+                            checked={useAIScheduling}
+                            onCheckedChange={(checked) => {
+                              setUseAIScheduling(Boolean(checked));
+                              if (checked) setScheduleDate(undefined);
+                            }}
+                          />
+                          <label className="font-medium text-sm">Let AI choose the ideal time to post</label>
+                        </div>
+                        
+                        <div className="flex items-center space-x-3">
+                          <Checkbox
+                            checked={!useAIScheduling}
+                            onCheckedChange={(checked) => {
+                              setUseAIScheduling(!Boolean(checked));
+                            }}
+                          />
+                          <label className="font-medium text-sm">Pick specific date & time</label>
+                        </div>
+                      </div>
+
+                      {useAIScheduling ? (
+                        <div className="bg-muted/50 p-3 rounded-lg">
+                          <div className="flex items-center gap-2 mb-2">
+                            <Zap className="w-4 h-4 text-primary" />
+                            <span className="text-sm font-medium">AI Optimal Scheduling</span>
+                          </div>
+                          <p className="text-xs text-muted-foreground">
+                            Our AI will analyze your audience activity patterns, platform algorithms, and content type to determine the best posting time for maximum engagement.
+                          </p>
+                        </div>
+                      ) : (
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button variant="outline" className="w-full justify-start">
+                              <CalendarIcon className="w-4 h-4 mr-2" />
+                              {scheduleDate ? format(scheduleDate, "PPP") : "Pick a date"}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0">
+                            <Calendar
+                              mode="single"
+                              selected={scheduleDate}
+                              onSelect={setScheduleDate}
+                              initialFocus
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      )}
+                    </div>
+                  )}
             </CardContent>
           </Card>
 
