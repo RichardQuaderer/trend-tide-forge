@@ -314,10 +314,22 @@ export default function Editor() {
       <div className="container max-w-7xl mx-auto px-4 py-6 space-y-8">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-bold text-gradient">
-              {currentStep === "preview" ? "Choose Your Video Style" : "Video Editor"}
-            </h1>
+          <div className="flex items-center gap-4">
+            <div>
+              <h1 className="text-3xl font-bold text-gradient">
+                {currentStep === "preview" ? "Choose Your Video Style" : "Video Editor"}
+              </h1>
+            </div>
+            {currentStep === "edit" && (
+              <div className="bg-muted/50 px-3 py-1.5 rounded-lg">
+                <p className="text-sm font-medium">
+                  {videoVariations.find(v => v.id === selectedVideos[currentEditingVideoIndex])?.title || "Video"} 
+                  <span className="text-muted-foreground ml-2">
+                    {currentEditingVideoIndex + 1}/{selectedVideos.length}
+                  </span>
+                </p>
+              </div>
+            )}
           </div>
           <div className="flex items-center gap-3">
             {currentStep === "edit" && (

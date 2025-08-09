@@ -329,33 +329,49 @@ export default function Generate() {
                 <span>AI Model</span>
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3">
-              {aiModels.map((model) => (
-                <div
-                  key={model.id}
-                  className={`p-3 border rounded-lg cursor-pointer transition-all ${
-                    selectedModel === model.id 
-                      ? 'border-primary bg-primary/5' 
-                      : 'hover:border-muted-foreground'
-                  } ${model.status === 'mock' ? 'opacity-60' : ''}`}
-                  onClick={() => model.status === 'available' && setSelectedModel(model.id)}
-                >
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="font-medium">{model.label}</h3>
-                      <div className="flex items-center space-x-4 text-xs text-muted-foreground mt-1">
-                        <span>Speed: {model.speed}</span>
-                        <span>Quality: {model.quality}</span>
+            <CardContent className="space-y-4">
+              <Select value={selectedModel} onValueChange={setSelectedModel}>
+                <SelectTrigger>
+                  <SelectValue>
+                    <div className="flex items-center justify-between w-full">
+                      <span>{aiModels.find(m => m.id === selectedModel)?.label}</span>
+                      <div className="flex items-center space-x-2 text-xs text-muted-foreground">
+                        <span>Speed: {aiModels.find(m => m.id === selectedModel)?.speed}</span>
+                        <span>Quality: {aiModels.find(m => m.id === selectedModel)?.quality}</span>
                       </div>
                     </div>
-                    {model.status === 'mock' && (
-                      <Badge variant="outline" className="text-xs">
-                        Coming Soon
-                      </Badge>
-                    )}
-                  </div>
-                </div>
-              ))}
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  {aiModels.map((model) => (
+                    <SelectItem 
+                      key={model.id} 
+                      value={model.id}
+                      disabled={model.status === 'mock'}
+                    >
+                      <div className="flex items-center justify-between w-full">
+                        <div className="flex items-center space-x-2">
+                          <span>{model.label}</span>
+                          {model.status === 'mock' && (
+                            <Badge variant="outline" className="text-xs">
+                              Coming Soon
+                            </Badge>
+                          )}
+                        </div>
+                        <div className="flex items-center space-x-4 text-xs text-muted-foreground ml-4">
+                          <span>Speed: {model.speed}</span>
+                          <span>Quality: {model.quality}</span>
+                        </div>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              
+              <div className="text-xs text-muted-foreground bg-muted/50 p-3 rounded-lg">
+                <p><strong>Selected:</strong> {aiModels.find(m => m.id === selectedModel)?.label}</p>
+                <p>Speed: {aiModels.find(m => m.id === selectedModel)?.speed} • Quality: {aiModels.find(m => m.id === selectedModel)?.quality}</p>
+              </div>
             </CardContent>
           </Card>
 
