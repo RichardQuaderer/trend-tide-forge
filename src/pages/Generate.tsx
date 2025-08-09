@@ -147,7 +147,7 @@ export default function Generate() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Left Column - Script Editor */}
+        {/* Left Column - Script Editor & Preview */}
         <div className="space-y-6">
           <Card className="shadow-creator">
             <CardHeader>
@@ -183,6 +183,55 @@ export default function Generate() {
                   Insert Hook
                 </Button>
               </div>
+            </CardContent>
+          </Card>
+
+          {/* Script Preview */}
+          <Card className="shadow-creator">
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Film className="w-5 h-5 text-primary" />
+                <span>Video Preview</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="bg-muted/50 p-4 rounded-lg">
+                <h4 className="font-semibold mb-2">Video Structure:</h4>
+                <div className="space-y-2 text-sm">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-primary rounded-full"></div>
+                    <span><strong>Hook (0-3s):</strong> {script.split('.')[0] || "Opening line to grab attention"}</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                    <span><strong>Content (3-45s):</strong> Main message and value delivery</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <span><strong>CTA (45-60s):</strong> Call to action and engagement prompt</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                <h4 className="font-semibold text-blue-900 mb-2">AI Recommendations:</h4>
+                <ul className="text-sm text-blue-800 space-y-1">
+                  <li>• Add visual text overlay for key points</li>
+                  <li>• Use trending audio for background music</li>
+                  <li>• Include captions for accessibility</li>
+                  <li>• Optimize for {selectedStyle} style</li>
+                </ul>
+              </div>
+
+              <Textarea
+                placeholder="Want to modify the script? Describe your changes here..."
+                className="min-h-[80px]"
+              />
+              
+              <Button variant="outline" className="w-full">
+                <Sparkles className="w-4 h-4 mr-2" />
+                Apply Changes
+              </Button>
             </CardContent>
           </Card>
         </div>

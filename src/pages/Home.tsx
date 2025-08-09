@@ -6,6 +6,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { TrendTicker } from "@/components/shared/trend-ticker";
 import { VideoCard } from "@/components/shared/video-card";
+import { ImportVideoDialog } from "@/components/dialogs/ImportVideoDialog";
+import { TemplatesDialog } from "@/components/dialogs/TemplatesDialog";
 import { api } from "@/lib/api";
 import { 
   Sparkles, 
@@ -22,6 +24,8 @@ import { motion } from "framer-motion";
 
 export default function Home() {
   const [prompt, setPrompt] = useState("");
+  const [importDialogOpen, setImportDialogOpen] = useState(false);
+  const [templatesDialogOpen, setTemplatesDialogOpen] = useState(false);
   
   const { data: videos = [] } = useQuery({
     queryKey: ['videos'],
@@ -43,14 +47,14 @@ export default function Home() {
       description: "Convert to short form",
       icon: Upload,
       color: "from-creator-pink to-creator-orange",
-      action: () => console.log("Import video"),
+      action: () => setImportDialogOpen(true),
     },
     {
       title: "Browse Templates",
       description: "Pre-built viral formats",
       icon: Layers,
       color: "from-creator-blue to-creator-purple",
-      action: () => console.log("Templates"),
+      action: () => setTemplatesDialogOpen(true),
     },
   ];
 
@@ -189,7 +193,7 @@ export default function Home() {
           </motion.div>
         </div>
 
-        {/* Right Column - Recent Videos */}
+        {/* Right Column - Inspiring Campaigns */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -199,71 +203,106 @@ export default function Home() {
           <Card className="shadow-creator">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="flex items-center space-x-2">
-                <Clock className="w-5 h-5 text-primary" />
-                <span>Recent Videos</span>
+                <TrendingUp className="w-5 h-5 text-primary" />
+                <span>Trending from Similar Companies</span>
               </CardTitle>
-              <Link to="/library">
-                <Button variant="ghost" size="sm">
-                  View All
-                </Button>
-              </Link>
+              <Button variant="ghost" size="sm">
+                View All
+              </Button>
             </CardHeader>
             <CardContent className="space-y-4">
-              {recentVideos.length > 0 ? (
-                <div className="space-y-3">
-                  {recentVideos.slice(0, 4).map((video) => (
-                    <div
-                      key={video.id}
-                      className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted/50 transition-colors cursor-pointer"
-                    >
-                      <div className="w-12 h-16 bg-muted rounded-lg overflow-hidden relative flex-shrink-0">
-                        <img
-                          src={video.thumbnail}
-                          alt={video.title}
-                          className="w-full h-full object-cover"
-                        />
-                        <div className="absolute inset-0 flex items-center justify-center bg-black/20">
-                          <Play className="w-4 h-4 text-white" />
-                        </div>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="font-medium text-sm truncate">{video.title}</h4>
-                        <div className="flex items-center space-x-2 mt-1">
-                          <Badge
-                            variant="outline"
-                            className={`text-xs ${
-                              video.status === 'Published' 
-                                ? 'border-green-200 text-green-700 bg-green-50' 
-                                : video.status === 'Generated'
-                                ? 'border-blue-200 text-blue-700 bg-blue-50'
-                                : 'border-yellow-200 text-yellow-700 bg-yellow-50'
-                            }`}
-                          >
-                            {video.status}
-                          </Badge>
-                          {video.status === 'Published' && (
-                            <span className="text-xs text-muted-foreground">
-                              {(video.views / 1000).toFixed(0)}K views
-                            </span>
-                          )}
-                        </div>
+              <div className="space-y-3">
+                {[
+                  {
+                    id: 1,
+                    title: "Morning Routine that Changed Everything",
+                    company: "ProductivityCo",
+                    views: 2400000,
+                    engagement: "12.3%",
+                    thumbnail: "/api/placeholder/60/80",
+                    platform: "TikTok"
+                  },
+                  {
+                    id: 2,
+                    title: "5 Apps I Use Every Day",
+                    company: "TechStartup",
+                    views: 1800000,
+                    engagement: "9.7%",
+                    thumbnail: "/api/placeholder/60/80",
+                    platform: "Instagram"
+                  },
+                  {
+                    id: 3,
+                    title: "Behind the Scenes: Building Our Product",
+                    company: "InnovateNow",
+                    views: 950000,
+                    engagement: "15.2%",
+                    thumbnail: "/api/placeholder/60/80",
+                    platform: "YouTube"
+                  },
+                  {
+                    id: 4,
+                    title: "Common Mistakes Everyone Makes",
+                    company: "ExpertCorp",
+                    views: 750000,
+                    engagement: "8.9%",
+                    thumbnail: "/api/placeholder/60/80",
+                    platform: "TikTok"
+                  }
+                ].map((campaign) => (
+                  <div
+                    key={campaign.id}
+                    className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted/50 transition-colors cursor-pointer group"
+                  >
+                    <div className="w-12 h-16 bg-muted rounded-lg overflow-hidden relative flex-shrink-0">
+                      <img
+                        src={campaign.thumbnail}
+                        alt={campaign.title}
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Play className="w-4 h-4 text-white" />
                       </div>
                     </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-8">
-                  <div className="w-16 h-16 mx-auto mb-4 bg-muted rounded-full flex items-center justify-center">
-                    <Play className="w-8 h-8 text-muted-foreground" />
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-medium text-sm truncate">{campaign.title}</h4>
+                      <p className="text-xs text-muted-foreground mb-1">{campaign.company}</p>
+                      <div className="flex items-center space-x-2">
+                        <Badge variant="outline" className="text-xs">
+                          {campaign.platform}
+                        </Badge>
+                        <span className="text-xs text-muted-foreground">
+                          {(campaign.views / 1000000).toFixed(1)}M views
+                        </span>
+                        <span className="text-xs text-green-600">
+                          {campaign.engagement} eng.
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                  <p className="text-muted-foreground">No videos yet</p>
-                  <p className="text-sm text-muted-foreground">Create your first viral video above! ✨</p>
-                </div>
-              )}
+                ))}
+              </div>
+              
+              <div className="text-center pt-2">
+                <p className="text-xs text-muted-foreground">
+                  Based on your industry and target audience
+                </p>
+              </div>
             </CardContent>
           </Card>
         </motion.div>
       </div>
+
+      {/* Dialogs */}
+      <ImportVideoDialog 
+        open={importDialogOpen} 
+        onOpenChange={setImportDialogOpen} 
+      />
+      <TemplatesDialog 
+        open={templatesDialogOpen} 
+        onOpenChange={setTemplatesDialogOpen}
+        onSelectTemplate={(template) => setPrompt(template.structure)}
+      />
     </div>
   );
 }
