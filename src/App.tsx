@@ -14,6 +14,7 @@ import Analytics from "./pages/Analytics";
 import Editor from "./pages/Editor";
 import Publish from "./pages/Publish";
 import NotFound from "./pages/NotFound";
+import OAuthCallback from "./pages/oauth-callback";
 
 const App = () => (
   <ErrorBoundary>
@@ -24,6 +25,7 @@ const App = () => (
         <Routes>
           <Route path="/welcome" element={<Welcome />} />
           <Route path="/onboarding" element={<Onboarding />} />
+          <Route path="/oauth-callback" element={<OAuthCallback />} />
           <Route element={<AppLayout />}>
             <Route path="/home" element={<Home />} />
             <Route path="/generate" element={<Generate />} />

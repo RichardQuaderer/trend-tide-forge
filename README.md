@@ -1,4 +1,67 @@
-# Welcome to your Lovable project
+# InfluenZer - AI Video Content Creator
+
+## YouTube OAuth Setup
+
+To enable YouTube integration, you need to configure Google OAuth credentials:
+
+### 1. Create Google Cloud Project
+
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Create a new project or select an existing one
+3. Enable the YouTube Data API v3
+
+### 2. Configure OAuth Consent Screen
+
+1. Navigate to "APIs & Services" > "OAuth consent screen"
+2. Choose "External" user type
+3. Fill in the required information:
+   - App name: InfluenZer
+   - User support email: your email
+   - Developer contact information: your email
+4. Add scopes:
+   - `https://www.googleapis.com/auth/youtube.readonly`
+5. Add test users if needed
+
+### 3. Create OAuth Credentials
+
+1. Go to "APIs & Services" > "Credentials"
+2. Click "Create Credentials" > "OAuth 2.0 Client IDs"
+3. Choose "Web application"
+4. Configure:
+   - **Authorized JavaScript origins**: 
+     - `http://localhost:3000` (development)
+     - `https://your-domain.com` (production)
+   - **Authorized redirect URIs**:
+     - `http://localhost:3000/oauth-callback` (development)
+     - `https://your-domain.com/oauth-callback` (production)
+
+### 4. Add Secrets to Supabase
+
+Use the buttons below to add your Google OAuth credentials:
+
+### 5. Security Notes
+
+- Never log or expose the `GOOGLE_CLIENT_SECRET`
+- Use HTTPS in production
+- The client secret is only used server-side in edge functions
+- Tokens are encrypted and stored securely in the database
+- State and nonce parameters protect against CSRF attacks
+
+### Required Scopes
+
+- `https://www.googleapis.com/auth/youtube.readonly` - Read channel info and video data
+
+You can configure additional scopes later if you need write access for publishing videos.
+
+## Features
+
+- ✅ Secure OAuth 2.0 + PKCE flow
+- ✅ Token refresh handling
+- ✅ CSRF protection with state/nonce
+- ✅ Encrypted token storage
+- ✅ Automatic token refresh
+- ✅ Connection status tracking
+- ✅ Test API functionality
 
 ## Project info
 

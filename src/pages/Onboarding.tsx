@@ -13,6 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Target, Palette, Share2, Sliders, Captions, Play, Youtube, Instagram, ArrowRight, ArrowLeft, Check, Building, Upload, Users, Smile, Camera, Zap, GraduationCap, Package } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { api, UserProfile } from "@/lib/api";
+import { ConnectPlatformsStep } from "@/components/onboarding/ConnectPlatformsStep";
 const steps = [{
   id: 1,
   title: "Business Goal",
@@ -232,39 +233,11 @@ export default function Onboarding() {
                   </div>}
 
                 {/* Step 4: Connect Platforms */}
-                {currentStep === 4 && <div className="space-y-6">
-                    <div className="text-center">
-                      <h3 className="text-lg font-semibold mb-2">Connect Your Social Platforms</h3>
-                      <p className="text-muted-foreground mb-6">
-                        Connect your social accounts to enable direct publishing and content optimization
-                      </p>
-                    </div>
-
-                    <div className="space-y-3">
-                      {platforms.map(platform => <Card key={platform.id} className={`cursor-pointer transition-all duration-200 hover:shadow-runway card-runway ${profile.platforms?.includes(platform.id) ? 'ring-2 ring-primary bg-primary/10' : ''}`} onClick={() => handlePlatformToggle(platform.id)}>
-                          <CardContent className="p-4 flex items-center justify-between">
-                            <div className="flex items-center space-x-3">
-                              <platform.icon className={`w-8 h-8 ${platform.color}`} />
-                              <div>
-                                <h3 className="font-semibold">{platform.label}</h3>
-                                <p className="text-sm text-muted-foreground">
-                                  {profile.platforms?.includes(platform.id) ? 'Connected' : 'Click to connect'}
-                                </p>
-                              </div>
-                            </div>
-                            <Button variant={profile.platforms?.includes(platform.id) ? "default" : "outline"} size="sm">
-                              {profile.platforms?.includes(platform.id) ? 'Connected' : 'Connect'}
-                            </Button>
-                          </CardContent>
-                        </Card>)}
-                    </div>
-
-                    <div className="text-center">
-                      <Badge variant="secondary" className="px-4 py-2">
-                        You can connect more platforms later in settings
-                      </Badge>
-                    </div>
-                  </div>}
+                {currentStep === 4 && <ConnectPlatformsStep 
+                    platforms={platforms}
+                    profile={profile}
+                    handlePlatformToggle={handlePlatformToggle}
+                  />}
               </CardContent>
             </Card>
           </motion.div>
