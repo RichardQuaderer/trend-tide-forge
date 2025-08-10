@@ -17,7 +17,9 @@ import {
   Play,
   Volume2,
   Captions,
-  ArrowRight
+  ArrowRight,
+  Shield,
+  ShieldCheck
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useMutation } from "@tanstack/react-query";
@@ -75,6 +77,7 @@ export default function Generate() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationProgress, setGenerationProgress] = useState(0);
   const [customStylePrompt, setCustomStylePrompt] = useState("");
+  const [brandConsistencyEnabled, setBrandConsistencyEnabled] = useState(false);
 
   const improveScriptMutation = useMutation({
     mutationFn: (script: string) => api.improveScript(script),
@@ -186,17 +189,22 @@ export default function Generate() {
               </div>
               
               <Button 
-                variant="secondary" 
+                variant={brandConsistencyEnabled ? "default" : "outline"}
                 className="w-full"
                 onClick={() => {
+                  setBrandConsistencyEnabled(!brandConsistencyEnabled);
                   toast({
-                    title: "Brand consistency applied! ✨",
-                    description: "Script optimized for your brand guidelines",
+                    title: brandConsistencyEnabled ? "Brand consistency disabled" : "Brand consistency enabled! ✨",
+                    description: brandConsistencyEnabled ? "Script will use standard optimization" : "Script optimized for your brand guidelines",
                   });
                 }}
               >
-                <Badge className="w-4 h-4 mr-2" />
-                Ensure Brand Consistency
+                {brandConsistencyEnabled ? (
+                  <ShieldCheck className="w-4 h-4 mr-2" />
+                ) : (
+                  <Shield className="w-4 h-4 mr-2" />
+                )}
+                {brandConsistencyEnabled ? "Brand Consistency ON" : "Enable Brand Consistency"}
               </Button>
             </CardContent>
           </Card>
