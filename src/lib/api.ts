@@ -12,12 +12,42 @@ export interface Video {
   id: string;
   title: string;
   thumbnail: string;
-  status: 'Draft' | 'Generated' | 'Published';
+  status: "Draft" | "Generated" | "Published";
   views: number;
   likes: number;
   shares: number;
   platforms: string[];
   createdAt: string;
+}
+
+// New interface for YouTube trending videos
+export interface TrendingVideo {
+  id: string;
+  title: string;
+  channelTitle: string;
+  thumbnail: string;
+  views: number;
+  publishedAt: string;
+  platform: string;
+  description?: string;
+  duration?: string;
+  tags?: string[];
+  categoryId?: string;
+  likeCount?: number;
+  commentCount?: number;
+}
+
+// New interface for API response
+export interface TrendingVideosResponse {
+  videos: TrendingVideo[];
+  metadata: {
+    count: number;
+    region: string;
+    timestamp: string;
+    cached?: boolean;
+    saved_path?: string;
+    cache_file?: string;
+  };
 }
 
 export interface AnalyticsData {
@@ -41,8 +71,8 @@ export interface AnalyticsData {
     id: string;
     name: string;
     description: string;
-    testType: 'A/B' | 'Multivariate';
-    status: 'Active' | 'Completed' | 'Paused';
+    testType: "A/B" | "Multivariate";
+    status: "Active" | "Completed" | "Paused";
     variants: Array<{
       id: string;
       name: string;
@@ -74,84 +104,109 @@ export interface UserProfile {
 
 // Mock data
 const mockTrends: Trend[] = [
-  { id: '1', hashtag: 'viral', usage: 2400000 },
-  { id: '2', hashtag: 'fyp', usage: 1800000 },
-  { id: '3', hashtag: 'trending', usage: 1200000 },
-  { id: '4', hashtag: 'creative', usage: 980000 },
-  { id: '5', hashtag: 'aesthetic', usage: 750000 },
-  { id: '6', sound: 'Epic Cinematic Beat', thumbnail: '/api/placeholder/80/80', usage: 450000 },
-  { id: '7', sound: 'Trending Pop Hook', thumbnail: '/api/placeholder/80/80', usage: 380000 },
-  { id: '8', sound: 'Viral Dance Track', thumbnail: '/api/placeholder/80/80', usage: 320000 },
-  { id: '9', sound: 'Motivational Speech', thumbnail: '/api/placeholder/80/80', usage: 280000 },
-  { id: '10', sound: 'Meme Sound Effect', thumbnail: '/api/placeholder/80/80', usage: 250000 },
+  { id: "1", hashtag: "viral", usage: 2400000 },
+  { id: "2", hashtag: "fyp", usage: 1800000 },
+  { id: "3", hashtag: "trending", usage: 1200000 },
+  { id: "4", hashtag: "creative", usage: 980000 },
+  { id: "5", hashtag: "aesthetic", usage: 750000 },
+  {
+    id: "6",
+    sound: "Epic Cinematic Beat",
+    thumbnail: "/api/placeholder/80/80",
+    usage: 450000,
+  },
+  {
+    id: "7",
+    sound: "Trending Pop Hook",
+    thumbnail: "/api/placeholder/80/80",
+    usage: 380000,
+  },
+  {
+    id: "8",
+    sound: "Viral Dance Track",
+    thumbnail: "/api/placeholder/80/80",
+    usage: 320000,
+  },
+  {
+    id: "9",
+    sound: "Motivational Speech",
+    thumbnail: "/api/placeholder/80/80",
+    usage: 280000,
+  },
+  {
+    id: "10",
+    sound: "Meme Sound Effect",
+    thumbnail: "/api/placeholder/80/80",
+    usage: 250000,
+  },
 ];
 
 const mockVideos: Video[] = [
   {
-    id: '1',
-    title: 'How to go viral in 2024',
-    thumbnail: '/api/placeholder/200/300',
-    status: 'Published',
+    id: "1",
+    title: "How to go viral in 2024",
+    thumbnail: "/api/placeholder/200/300",
+    status: "Published",
     views: 125000,
     likes: 8500,
     shares: 320,
-    platforms: ['TikTok', 'Instagram'],
-    createdAt: '2024-01-15',
+    platforms: ["TikTok", "Instagram"],
+    createdAt: "2024-01-15",
   },
   {
-    id: '2',
-    title: 'Secret productivity hack',
-    thumbnail: '/api/placeholder/200/300',
-    status: 'Generated',
+    id: "2",
+    title: "Secret productivity hack",
+    thumbnail: "/api/placeholder/200/300",
+    status: "Generated",
     views: 0,
     likes: 0,
     shares: 0,
     platforms: [],
-    createdAt: '2024-01-16',
+    createdAt: "2024-01-16",
   },
   {
-    id: '3',
-    title: 'Morning routine that changed my life',
-    thumbnail: '/api/placeholder/200/300',
-    status: 'Draft',
+    id: "3",
+    title: "Morning routine that changed my life",
+    thumbnail: "/api/placeholder/200/300",
+    status: "Draft",
     views: 0,
     likes: 0,
     shares: 0,
     platforms: [],
-    createdAt: '2024-01-16',
+    createdAt: "2024-01-16",
   },
   {
-    id: '4',
-    title: 'AI tools everyone should know',
-    thumbnail: '/api/placeholder/200/300',
-    status: 'Published',
+    id: "4",
+    title: "AI tools everyone should know",
+    thumbnail: "/api/placeholder/200/300",
+    status: "Published",
     views: 89000,
     likes: 5600,
     shares: 180,
-    platforms: ['YouTube', 'TikTok'],
-    createdAt: '2024-01-14',
+    platforms: ["YouTube", "TikTok"],
+    createdAt: "2024-01-14",
   },
   {
-    id: '5',
-    title: 'Quick recipe for busy people',
-    thumbnail: '/api/placeholder/200/300',
-    status: 'Published',
+    id: "5",
+    title: "Quick recipe for busy people",
+    thumbnail: "/api/placeholder/200/300",
+    status: "Published",
     views: 67000,
     likes: 4200,
     shares: 95,
-    platforms: ['Instagram', 'TikTok'],
-    createdAt: '2024-01-13',
+    platforms: ["Instagram", "TikTok"],
+    createdAt: "2024-01-13",
   },
   {
-    id: '6',
-    title: 'Fashion trends 2024',
-    thumbnail: '/api/placeholder/200/300',
-    status: 'Generated',
+    id: "6",
+    title: "Fashion trends 2024",
+    thumbnail: "/api/placeholder/200/300",
+    status: "Generated",
     views: 0,
     likes: 0,
     shares: 0,
     platforms: [],
-    createdAt: '2024-01-16',
+    createdAt: "2024-01-16",
   },
 ];
 
@@ -161,138 +216,142 @@ const mockAnalytics: AnalyticsData = {
   totalShares: 595,
   bestHookCTR: 12.5,
   dailyStats: [
-    { date: '2024-01-10', views: 12000, likes: 800, shares: 45 },
-    { date: '2024-01-11', views: 18000, likes: 1200, shares: 67 },
-    { date: '2024-01-12', views: 25000, likes: 1800, shares: 89 },
-    { date: '2024-01-13', views: 31000, likes: 2100, shares: 95 },
-    { date: '2024-01-14', views: 28000, likes: 1900, shares: 82 },
-    { date: '2024-01-15', views: 35000, likes: 2400, shares: 120 },
-    { date: '2024-01-16', views: 22000, likes: 1500, shares: 68 },
+    { date: "2024-01-10", views: 12000, likes: 800, shares: 45 },
+    { date: "2024-01-11", views: 18000, likes: 1200, shares: 67 },
+    { date: "2024-01-12", views: 25000, likes: 1800, shares: 89 },
+    { date: "2024-01-13", views: 31000, likes: 2100, shares: 95 },
+    { date: "2024-01-14", views: 28000, likes: 1900, shares: 82 },
+    { date: "2024-01-15", views: 35000, likes: 2400, shares: 120 },
+    { date: "2024-01-16", views: 22000, likes: 1500, shares: 68 },
   ],
   platformBreakdown: [
-    { platform: 'TikTok', views: 168600, percentage: 60 },
-    { platform: 'Instagram', views: 84300, percentage: 30 },
-    { platform: 'YouTube', views: 28100, percentage: 10 },
+    { platform: "TikTok", views: 168600, percentage: 60 },
+    { platform: "Instagram", views: 84300, percentage: 30 },
+    { platform: "YouTube", views: 28100, percentage: 10 },
   ],
   bestHook: "Wait for it... this will blow your mind 🤯",
   campaigns: [
     {
-      id: 'campaign_1',
-      name: 'Morning Routine Hook Test',
-      description: 'Testing different opening hooks for morning routine content',
-      testType: 'A/B',
-      status: 'Completed',
+      id: "campaign_1",
+      name: "Morning Routine Hook Test",
+      description:
+        "Testing different opening hooks for morning routine content",
+      testType: "A/B",
+      status: "Completed",
       variants: [
         {
-          id: 'variant_a',
-          name: 'Variant A - Question Hook',
+          id: "variant_a",
+          name: "Variant A - Question Hook",
           views: 45000,
           clicks: 5400,
           conversions: 324,
           ctr: 12.0,
           conversionRate: 6.0,
-          hookText: "What if I told you there's a morning routine that changed everything?",
-          thumbnail: '/api/placeholder/200/300'
+          hookText:
+            "What if I told you there's a morning routine that changed everything?",
+          thumbnail: "/api/placeholder/200/300",
         },
         {
-          id: 'variant_b',
-          name: 'Variant B - Direct Statement',
+          id: "variant_b",
+          name: "Variant B - Direct Statement",
           views: 47000,
           clicks: 6580,
           conversions: 461,
           ctr: 14.0,
           conversionRate: 7.0,
-          hookText: "This 5-minute morning routine will transform your entire day",
-          thumbnail: '/api/placeholder/200/300'
-        }
+          hookText:
+            "This 5-minute morning routine will transform your entire day",
+          thumbnail: "/api/placeholder/200/300",
+        },
       ],
-      startDate: '2024-01-01',
-      endDate: '2024-01-15',
-      winner: 'variant_b'
+      startDate: "2024-01-01",
+      endDate: "2024-01-15",
+      winner: "variant_b",
     },
     {
-      id: 'campaign_2',
-      name: 'Productivity Thumbnail Test',
-      description: 'A/B testing different thumbnail styles for productivity content',
-      testType: 'A/B',
-      status: 'Completed',
+      id: "campaign_2",
+      name: "Productivity Thumbnail Test",
+      description:
+        "A/B testing different thumbnail styles for productivity content",
+      testType: "A/B",
+      status: "Completed",
       variants: [
         {
-          id: 'variant_a2',
-          name: 'Variant A - Face Focus',
+          id: "variant_a2",
+          name: "Variant A - Face Focus",
           views: 52000,
           clicks: 4160,
           conversions: 249,
           ctr: 8.0,
           conversionRate: 6.0,
           hookText: "Stop wasting time with these 3 simple hacks",
-          thumbnail: '/api/placeholder/200/300'
+          thumbnail: "/api/placeholder/200/300",
         },
         {
-          id: 'variant_b2',
-          name: 'Variant B - Text Overlay',
+          id: "variant_b2",
+          name: "Variant B - Text Overlay",
           views: 51500,
           clicks: 5665,
           conversions: 283,
           ctr: 11.0,
           conversionRate: 5.0,
           hookText: "Stop wasting time with these 3 simple hacks",
-          thumbnail: '/api/placeholder/200/300'
-        }
+          thumbnail: "/api/placeholder/200/300",
+        },
       ],
-      startDate: '2023-12-15',
-      endDate: '2024-01-05',
-      winner: 'variant_b2'
+      startDate: "2023-12-15",
+      endDate: "2024-01-05",
+      winner: "variant_b2",
     },
     {
-      id: 'campaign_3',
-      name: 'AI Tools Title Test',
-      description: 'Testing different video titles for AI tools content',
-      testType: 'Multivariate',
-      status: 'Active',
+      id: "campaign_3",
+      name: "AI Tools Title Test",
+      description: "Testing different video titles for AI tools content",
+      testType: "Multivariate",
+      status: "Active",
       variants: [
         {
-          id: 'variant_a3',
-          name: 'Variant A - Number Focus',
+          id: "variant_a3",
+          name: "Variant A - Number Focus",
           views: 28000,
           clicks: 2520,
           conversions: 139,
           ctr: 9.0,
           conversionRate: 5.5,
           hookText: "5 AI tools that will replace your job (use them first)",
-          thumbnail: '/api/placeholder/200/300'
+          thumbnail: "/api/placeholder/200/300",
         },
         {
-          id: 'variant_b3',
-          name: 'Variant B - Urgency Focus',
+          id: "variant_b3",
+          name: "Variant B - Urgency Focus",
           views: 31000,
           clicks: 3410,
           conversions: 186,
           ctr: 11.0,
           conversionRate: 5.5,
           hookText: "AI tools everyone should know before it's too late",
-          thumbnail: '/api/placeholder/200/300'
+          thumbnail: "/api/placeholder/200/300",
         },
         {
-          id: 'variant_c3',
-          name: 'Variant C - Benefit Focus',
+          id: "variant_c3",
+          name: "Variant C - Benefit Focus",
           views: 26500,
           clicks: 2915,
           conversions: 175,
           ctr: 11.0,
           conversionRate: 6.0,
           hookText: "These AI tools will 10x your productivity in 2024",
-          thumbnail: '/api/placeholder/200/300'
-        }
+          thumbnail: "/api/placeholder/200/300",
+        },
       ],
-      startDate: '2024-01-10',
-      winner: undefined
-    }
-  ]
+      startDate: "2024-01-10",
+      winner: undefined,
+    },
+  ],
 };
 
 // API functions with simulated delays
-const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const api = {
   // Get trending hashtags and sounds
@@ -314,7 +373,9 @@ export const api = {
   },
 
   // Improve script with AI
-  async improveScript(script: string): Promise<{ improvedScript: string; hookSuggestions: string[] }> {
+  async improveScript(
+    script: string
+  ): Promise<{ improvedScript: string; hookSuggestions: string[] }> {
     await delay(1200);
     return {
       improvedScript: `${script}\n\n[AI Enhanced]: Added engaging hooks and optimized for viral potential.`,
@@ -327,23 +388,30 @@ export const api = {
   },
 
   // Generate video
-  async generateVideo(script: string, settings: any): Promise<{ videoId: string; status: string }> {
+  async generateVideo(
+    script: string,
+    settings: any
+  ): Promise<{ videoId: string; status: string }> {
     await delay(3000);
     const videoId = `video_${Date.now()}`;
     return {
       videoId,
-      status: 'generated',
+      status: "generated",
     };
   },
 
   // Publish to platforms
-  async publishVideo(videoId: string, platforms: string[], metadata: any): Promise<{ success: boolean; results: any[] }> {
+  async publishVideo(
+    videoId: string,
+    platforms: string[],
+    metadata: any
+  ): Promise<{ success: boolean; results: any[] }> {
     await delay(2000);
     return {
       success: true,
-      results: platforms.map(platform => ({
+      results: platforms.map((platform) => ({
         platform,
-        status: 'published',
+        status: "published",
         url: `https://${platform.toLowerCase()}.com/video/${videoId}`,
       })),
     };
@@ -352,14 +420,118 @@ export const api = {
   // Save user profile
   async saveProfile(profile: UserProfile): Promise<{ success: boolean }> {
     await delay(500);
-    localStorage.setItem('user_profile', JSON.stringify(profile));
+    localStorage.setItem("user_profile", JSON.stringify(profile));
     return { success: true };
   },
 
   // Get user profile
   async getProfile(): Promise<UserProfile | null> {
     await delay(200);
-    const stored = localStorage.getItem('user_profile');
+    const stored = localStorage.getItem("user_profile");
     return stored ? JSON.parse(stored) : null;
+  },
+
+  // New YouTube Trending Videos API functions
+  async getTrendingVideos(
+    region: string = "US",
+    maxResults: number = 10
+  ): Promise<TrendingVideo[]> {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/trending-videos?region=${region}&max_results=${maxResults}`
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data: TrendingVideosResponse = await response.json();
+      return data.videos;
+    } catch (error) {
+      console.error("Error fetching trending videos:", error);
+      // Fallback to cached data if available
+      try {
+        return await this.getCachedTrendingVideos(region);
+      } catch (cacheError) {
+        console.error("Error fetching cached videos:", cacheError);
+        return [];
+      }
+    }
+  },
+
+  async getCachedTrendingVideos(
+    region: string = "US"
+  ): Promise<TrendingVideo[]> {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/trending-videos/cached?region=${region}`
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data: TrendingVideosResponse = await response.json();
+      return data.videos;
+    } catch (error) {
+      console.error("Error fetching cached trending videos:", error);
+      return [];
+    }
+  },
+
+  async refreshTrendingVideos(
+    region: string = "US",
+    maxResults: number = 25
+  ): Promise<TrendingVideo[]> {
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/trending-videos/refresh",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ region, max_results: maxResults }),
+        }
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data: TrendingVideosResponse = await response.json();
+      return data.videos;
+    } catch (error) {
+      console.error("Error refreshing trending videos:", error);
+      return [];
+    }
+  },
+
+  async getSupportedRegions(): Promise<{ code: string; name: string }[]> {
+    try {
+      const response = await fetch("http://localhost:5000/api/regions");
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      return data.regions;
+    } catch (error) {
+      console.error("Error fetching supported regions:", error);
+      // Return default regions as fallback
+      return [
+        { code: "US", name: "United States" },
+        { code: "GB", name: "United Kingdom" },
+        { code: "CA", name: "Canada" },
+        { code: "AU", name: "Australia" },
+        { code: "DE", name: "Germany" },
+        { code: "FR", name: "France" },
+        { code: "JP", name: "Japan" },
+        { code: "IN", name: "India" },
+      ];
+    }
+  },
+
+  async checkBackendHealth(): Promise<boolean> {
+    try {
+      const response = await fetch("http://localhost:5000/api/health");
+      return response.ok;
+    } catch (error) {
+      console.error("Backend health check failed:", error);
+      return false;
+    }
   },
 };
