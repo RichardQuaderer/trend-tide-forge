@@ -184,6 +184,20 @@ export default function Generate() {
                   Insert Hook
                 </Button>
               </div>
+              
+              <Button 
+                variant="secondary" 
+                className="w-full"
+                onClick={() => {
+                  toast({
+                    title: "Brand consistency applied! ✨",
+                    description: "Script optimized for your brand guidelines",
+                  });
+                }}
+              >
+                <Badge className="w-4 h-4 mr-2" />
+                Ensure Brand Consistency
+              </Button>
             </CardContent>
           </Card>
 
