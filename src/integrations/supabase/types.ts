@@ -14,13 +14,84 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      oauth_states: {
+        Row: {
+          code_verifier: string
+          created_at: string
+          id: string
+          nonce: string
+          platform: string
+          state: string
+          user_id: string
+        }
+        Insert: {
+          code_verifier: string
+          created_at?: string
+          id?: string
+          nonce: string
+          platform: string
+          state: string
+          user_id: string
+        }
+        Update: {
+          code_verifier?: string
+          created_at?: string
+          id?: string
+          nonce?: string
+          platform?: string
+          state?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      platform_connections: {
+        Row: {
+          access_token: string
+          channel_id: string | null
+          channel_name: string | null
+          connected_at: string
+          id: string
+          platform: string
+          refresh_token: string | null
+          token_expires_at: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          access_token: string
+          channel_id?: string | null
+          channel_name?: string | null
+          connected_at?: string
+          id?: string
+          platform: string
+          refresh_token?: string | null
+          token_expires_at?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          access_token?: string
+          channel_id?: string | null
+          channel_name?: string | null
+          connected_at?: string
+          id?: string
+          platform?: string
+          refresh_token?: string | null
+          token_expires_at?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      cleanup_expired_oauth_states: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
