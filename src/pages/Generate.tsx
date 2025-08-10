@@ -16,7 +16,9 @@ import {
   Play,
   Volume2,
   Captions,
-  ArrowRight
+  ArrowRight,
+  Shield,
+  ShieldCheck
 } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { api } from "@/lib/api";
@@ -104,6 +106,19 @@ export default function Generate() {
   const [videoUrl, setVideoUrl] = useState<string>("");
   const [rendering, setRendering] = useState(false);
   const [lastUsed, setLastUsed] = useState<{ styleId?: string; audience?: string; script?: string }>({});
+  const [brandConsistencyEnabled, setBrandConsistencyEnabled] = useState(false);
+
+  const improveScriptMutation = useMutation({
+    mutationFn: (script: string) => api.improveScript(script),
+    onSuccess: (data) => {
+      setScript(data.improvedScript);
+      toast({
+        title: "Script improved! ✨",
+        description: "Added viral hooks and optimizations",
+      });
+    },
+  });
+  const handleImproveScript = () => improveScriptMutation.mutate(script);
 
   const generateVideoMutation = useMutation({
     mutationFn: (data: any) => api.generateVideo(data.script, data.settings),
@@ -203,6 +218,115 @@ export default function Generate() {
       </div>
 
         <div className="space-y-6">
+          <Card className="shadow-creator">
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Wand2 className="w-5 h-5 text-primary" />
+                <span>Script Editor</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <Textarea
+                value={script}
+                onChange={(e) => setScript(e.target.value)}
+                placeholder="Write your video script here..."
+                className="min-h-[200px] text-base"
+              />
+              
+              <div className="flex items-center justify-between text-sm text-muted-foreground">
+                <span>{script.length} characters</span>
+                <span>~{Math.ceil(script.length / 150)} seconds</span>
+              </div>
+
+              <div className="flex gap-3">
+                <Button
+                  variant="outline"
+                  onClick={handleImproveScript}
+                  disabled={improveScriptMutation.isPending}
+                  className="flex-1"
+                >
+                  <Sparkles className="w-4 h-4 mr-2" />
+                  {improveScriptMutation.isPending ? "Improving..." : "AI Improve"}
+                </Button>
+                <Button variant="outline">
+                  Insert Hook
+                </Button>
+              </div>
+              
+              <Button 
+                variant={brandConsistencyEnabled ? "default" : "outline"}
+                className="w-full"
+                onClick={() => {
+                  setBrandConsistencyEnabled(!brandConsistencyEnabled);
+                  toast({
+                    title: brandConsistencyEnabled ? "Brand consistency disabled" : "Brand consistency enabled! ✨",
+                    description: brandConsistencyEnabled ? "Script will use standard optimization" : "Script optimized for your brand guidelines",
+                  });
+                }}
+              >
+                {brandConsistencyEnabled ? (
+                  <ShieldCheck className="w-4 h-4 mr-2" />
+                ) : (
+                  <Shield className="w-4 h-4 mr-2" />
+                )}
+                {brandConsistencyEnabled ? "Brand Consistency ON" : "Enable Brand Consistency"}
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* Script Preview */}
+          <Card className="shadow-creator">
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Film className="w-5 h-5 text-primary" />
+                <span>Video Preview</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="bg-muted/50 p-4 rounded-lg">
+                <h4 className="font-semibold mb-2">Video Structure:</h4>
+                <div className="space-y-2 text-sm">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-primary rounded-full"></div>
+                    <span><strong>Hook (0-3s):</strong> {script.split('.')[0] || "Opening line to grab attention"}</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                    <span><strong>Content (3-45s):</strong> Main message and value delivery</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <span><strong>CTA (45-60s):</strong> Call to action and engagement prompt</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                <h4 className="font-semibold text-blue-900 mb-2">AI Recommendations:</h4>
+                <ul className="text-sm text-blue-800 space-y-1">
+                  <li>• Add visual text overlay for key points</li>
+                  <li>• Use trending audio for background music</li>
+                  <li>• Include captions for accessibility</li>
+                  <li>• Optimize for {selectedStyle} style</li>
+                </ul>
+              </div>
+
+              <Textarea
+                placeholder="Want to modify the script? Describe your changes here..."
+                className="min-h-[80px]"
+              />
+              
+              <Button variant="outline" className="w-full">
+                <Sparkles className="w-4 h-4 mr-2" />
+                Apply Changes
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Right Column - Settings */}
+        <div className="space-y-6">
+          {/* Video Style */}
           <Card className="shadow-creator">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
