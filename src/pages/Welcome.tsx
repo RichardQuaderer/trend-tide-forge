@@ -64,7 +64,7 @@ export default function Welcome() {
       }} transition={{
         duration: 0.6,
         delay: 0.4
-      }} className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed">More reach, less spend. AI-generated videos that boost brand visibility without the marketing overhead across TikTok, Instagram, and YouTube.</motion.p>
+      }} className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed">More reach, less spend. AI-generated videos that boost brand visibility across TikTok, Instagram, and YouTube.  </motion.p>
 
         {/* Features */}
         <motion.div initial={{
