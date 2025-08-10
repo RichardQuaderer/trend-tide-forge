@@ -15,6 +15,8 @@ import Editor from "./pages/Editor";
 import Publish from "./pages/Publish";
 import NotFound from "./pages/NotFound";
 import OAuthCallback from "./pages/oauth-callback";
+import PreparePost from "./pages/PreparePost";
+import PostSuccess from "./pages/PostSuccess";
 
 const App = () => (
   <ErrorBoundary>
@@ -29,6 +31,8 @@ const App = () => (
           <Route element={<AppLayout />}>
             <Route path="/home" element={<Home />} />
             <Route path="/generate" element={<Generate />} />
+            <Route path="/prepare" element={<PreparePost />} />
+            <Route path="/post-success" element={<PostSuccess />} />
             <Route path="/library" element={<Library />} />
             <Route path="/analytics" element={<Analytics />} />
             <Route path="/editor/:id" element={<Editor />} />

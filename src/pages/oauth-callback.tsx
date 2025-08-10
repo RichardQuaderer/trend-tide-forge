@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
 
 export default function OAuthCallback() {
   const [searchParams] = useSearchParams();
@@ -12,12 +11,8 @@ export default function OAuthCallback() {
       const error = searchParams.get('error');
 
       if (error) {
-        // Send error to parent window
         if (window.opener) {
-          window.opener.postMessage({
-            type: 'YOUTUBE_OAUTH_ERROR',
-            error: error
-          }, window.location.origin);
+          window.opener.postMessage({ type: 'YOUTUBE_OAUTH_ERROR', error }, window.location.origin);
         }
         window.close();
         return;
@@ -25,40 +20,30 @@ export default function OAuthCallback() {
 
       if (code && state) {
         try {
-          // Call the callback function
-          const { data, error: callbackError } = await supabase.functions.invoke(
-            'youtube-oauth-callback',
-            {
-              body: { code, state }
+          // First try: call local dev middleware to finish OAuth
+          const resp = await fetch('/api/youtube/oauth/callback', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ code, state })
+          });
+          const data = await resp.json();
+          if (data?.success) {
+            if (window.opener) {
+              window.opener.postMessage({ type: 'YOUTUBE_OAUTH_SUCCESS', channelName: data.channelName }, window.location.origin);
             }
-          );
-
-          if (callbackError || !data?.success) {
-            throw new Error(callbackError?.message || 'OAuth callback failed');
+          } else {
+            // Fallback: pass raw code/state back to opener if needed
+            if (window.opener) {
+              window.opener.postMessage({ type: 'OAUTH_CODE', code, state }, window.location.origin);
+            }
           }
-
-          // Send success message to parent window
+        } catch (e) {
           if (window.opener) {
-            window.opener.postMessage({
-              type: 'YOUTUBE_OAUTH_SUCCESS',
-              channelName: data.channelName
-            }, window.location.origin);
-          }
-          
-        } catch (error) {
-          console.error('OAuth callback error:', error);
-          
-          // Send error to parent window
-          if (window.opener) {
-            window.opener.postMessage({
-              type: 'YOUTUBE_OAUTH_ERROR',
-              error: error instanceof Error ? error.message : 'Unknown error'
-            }, window.location.origin);
+            window.opener.postMessage({ type: 'YOUTUBE_OAUTH_ERROR', error: 'OAuth callback error' }, window.location.origin);
           }
         }
       }
 
-      // Close the popup window
       window.close();
     };
 

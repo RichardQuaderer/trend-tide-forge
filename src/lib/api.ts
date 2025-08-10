@@ -353,6 +353,38 @@ export const api = {
   async saveProfile(profile: UserProfile): Promise<{ success: boolean }> {
     await delay(500);
     localStorage.setItem('user_profile', JSON.stringify(profile));
+
+    // Best-effort: send to dev server to persist in .ci
+    try {
+      const logoFile = profile.companyLogo instanceof File ? profile.companyLogo : null;
+      let logoBase64: string | undefined;
+      let logoFilename: string | undefined;
+      if (logoFile) {
+        logoFilename = logoFile.name;
+        const dataUrl: string = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result as string);
+          reader.onerror = reject;
+          reader.readAsDataURL(logoFile);
+        });
+        logoBase64 = dataUrl; // middleware accepts full data URL
+      }
+
+      await fetch('/api/save-onboarding', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          companyUrl: profile.companyUrl,
+          targetAudience: profile.targetAudience,
+          logoBase64,
+          logoFilename,
+        })
+      });
+    } catch (e) {
+      // Non-blocking in production or when API not available
+      console.warn('Failed to persist onboarding assets to .ci (dev only):', e);
+    }
+
     return { success: true };
   },
 

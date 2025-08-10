@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Youtube, Instagram, Play, ExternalLink } from "lucide-react";
 import { useYouTubeConnection } from "@/hooks/useYouTubeConnection";
 import { UserProfile } from "@/lib/api";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface Platform {
   id: string;
@@ -22,7 +23,7 @@ export function ConnectPlatformsStep({ platforms, profile, handlePlatformToggle 
   const { connection, loading, connectYouTube, disconnectYouTube, testConnection } = useYouTubeConnection();
 
   const handleYouTubeAction = async (platformId: string) => {
-    if (connection) {
+    if (connection.connected) {
       await disconnectYouTube();
       handlePlatformToggle(platformId); // Remove from selected platforms
     } else {
@@ -33,17 +34,23 @@ export function ConnectPlatformsStep({ platforms, profile, handlePlatformToggle 
     }
   };
 
+  const isDisabledPlatform = (platformId: string) => platformId === 'tiktok' || platformId === 'instagram';
+
   const renderPlatformCard = (platform: Platform) => {
     const isYouTube = platform.id === 'youtube';
-    const isConnected = isYouTube ? !!connection : profile.platforms?.includes(platform.id);
+    const isDisabled = isDisabledPlatform(platform.id);
+    const isConnected = isYouTube ? !!connection.connected : profile.platforms?.includes(platform.id);
     const isSelected = profile.platforms?.includes(platform.id);
 
-    return (
+    const cardInner = (
       <Card 
         key={platform.id} 
-        className={`cursor-pointer transition-all duration-200 hover:shadow-runway card-runway ${
+        className={`transition-all duration-200 card-runway ${
           isSelected ? 'ring-2 ring-primary bg-primary/10' : ''
-        }`}
+        } ${isDisabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer hover:shadow-runway'}`}
+        onClick={() => {
+          if (isDisabled) return;
+        }}
       >
         <CardContent className="p-4 flex items-center justify-between">
           <div className="flex items-center space-x-3">
@@ -51,8 +58,10 @@ export function ConnectPlatformsStep({ platforms, profile, handlePlatformToggle 
             <div>
               <h3 className="font-semibold">{platform.label}</h3>
               <p className="text-sm text-muted-foreground">
-                {isYouTube && connection ? (
-                  `Connected: ${connection.channel_name || 'YouTube Channel'}`
+                {isDisabled ? (
+                  'Coming soon'
+                ) : isYouTube && connection.connected ? (
+                  `Connected: ${connection.channelName || 'YouTube Channel'}`
                 ) : isYouTube ? (
                   'Connect your YouTube account'
                 ) : isConnected ? (
@@ -63,19 +72,18 @@ export function ConnectPlatformsStep({ platforms, profile, handlePlatformToggle 
               </p>
             </div>
           </div>
-          
           <div className="flex items-center space-x-2">
             {isYouTube ? (
               <>
                 <Button 
-                  variant={connection ? "default" : "outline"} 
+                  variant={connection.connected ? "default" : "outline"} 
                   size="sm"
                   onClick={() => handleYouTubeAction(platform.id)}
                   disabled={loading}
                 >
-                  {loading ? 'Loading...' : connection ? 'Disconnect' : 'Connect'}
+                  {loading ? 'Loading...' : connection.connected ? 'Disconnect' : 'Connect'}
                 </Button>
-                {connection && (
+                {connection.connected && (
                   <Button 
                     variant="ghost" 
                     size="sm"
@@ -90,14 +98,28 @@ export function ConnectPlatformsStep({ platforms, profile, handlePlatformToggle 
               <Button 
                 variant={isConnected ? "default" : "outline"} 
                 size="sm"
-                onClick={() => handlePlatformToggle(platform.id)}
+                onClick={() => { if (!isDisabled) handlePlatformToggle(platform.id); }}
+                disabled={isDisabled}
               >
-                {isConnected ? 'Connected' : 'Connect'}
+                {isDisabled ? 'Soon' : isConnected ? 'Connected' : 'Connect'}
               </Button>
             )}
           </div>
         </CardContent>
       </Card>
+    );
+
+    return isDisabled ? (
+      <Tooltip key={platform.id}>
+        <TooltipTrigger asChild>
+          <div>{cardInner}</div>
+        </TooltipTrigger>
+        <TooltipContent>
+          These features are being worked on and will be available soon.
+        </TooltipContent>
+      </Tooltip>
+    ) : (
+      cardInner
     );
   };
 
